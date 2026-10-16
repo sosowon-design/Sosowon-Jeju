@@ -1,0 +1,2028 @@
+<!-- ==========================================================================
+  [소소원 제주 (SOSOWON JEJU) - 아임웹(Imweb) 코드 위젯 전용 통합 풀패키지]
+  
+  * 아임웹 사용법:
+    1. 아임웹 디자인 모드 접속
+    2. 원하는 섹션에 [+] 버튼 클릭 후 [코드 위젯] 추가
+    3. 코드 위젯 설정창에 아래의 전체 코드를 그대로 복사(Ctrl+C)하여 붙여넣기(Ctrl+V)
+    4. 필요 시 "<!-- 아임웹 이미지 URL 입력 공간 -->" 주석 부분을 찾아 아임웹에 업로드한 이미지 링크로 교체
+  
+  * 구조:
+    <style>  : 아임웹 스타일 충돌 방지 네임스페이스 스코핑 (#sso-full-widget) + 반응형 미디어 쿼리
+    <div>    : 헤더 네비게이션 + 히어로 슬라이더 + 소개(ABOUT) + 건축철학 + 헤리티지 & 체험 + 객실(STAY) + 예약/FAQ + 푸터
+    <script> : 순수 Vanilla JavaScript (슬라이더, 탭 전환, 갤러리 팝업/스위치, 모바일 아코디언 및 메뉴 제어)
+========================================================================== -->
+
+<!-- [1. STYLE] 아임웹 전용 고유 CSS 스타일시트 -->
+<style>
+  /* 구글 폰트 & 프리텐다드 */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Gowun+Batang:wght@400;700&display=swap');
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+  /* 네임스페이스 스코프 리셋 (#sso-full-widget) */
+  #sso-full-widget {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', sans-serif;
+    color: #2B2623;
+    background-color: #F6F4F0;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  #sso-full-widget *,
+  #sso-full-widget *::before,
+  #sso-full-widget *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  #sso-full-widget button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+
+  #sso-full-widget a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* 컨테이너 */
+  #sso-full-widget .sso-container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* 반응형 분기 유틸 */
+  #sso-full-widget .sso-mobile-only {
+    display: none !important;
+  }
+  #sso-full-widget .sso-desktop-only {
+    display: inline-block !important;
+  }
+  @media (max-width: 768px) {
+    #sso-full-widget .sso-mobile-only {
+      display: inline-block !important;
+    }
+    #sso-full-widget .sso-desktop-only {
+      display: none !important;
+    }
+    #sso-full-widget div.sso-mobile-only,
+    #sso-full-widget p.sso-mobile-only,
+    #sso-full-widget span.sso-mobile-only {
+      display: block !important;
+    }
+  }
+
+  /* 공통 타이포그래피 */
+  #sso-full-widget .sso-eyebrow {
+    display: inline-block;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    color: #8E5642;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  #sso-full-widget .sso-section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: #2B2623;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+  }
+
+  #sso-full-widget .sso-divider {
+    width: 32px;
+    height: 1.5px;
+    background-color: #8E5642;
+    margin: 18px 0;
+  }
+  #sso-full-widget .sso-center-divider {
+    margin: 18px auto;
+  }
+
+  #sso-full-widget .sso-header-sub {
+    font-size: 14.5px;
+    color: rgba(43, 38, 35, 0.75);
+    font-weight: 400;
+    line-height: 1.7;
+    margin-top: 8px;
+  }
+
+  #sso-full-widget .sso-center-header {
+    text-align: center;
+    margin-bottom: 44px;
+  }
+
+  /* ==========================================================================
+     [헤더 네비게이션]
+     ========================================================================== */
+  #sso-full-widget .sso-navbar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(246, 244, 240, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(142, 86, 66, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  #sso-full-widget .sso-nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  #sso-full-widget .sso-nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: #2B2623;
+  }
+
+  #sso-full-widget .sso-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  #sso-full-widget .sso-nav-link {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #5C554F;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease;
+  }
+  #sso-full-widget .sso-nav-link:hover {
+    color: #8E5642;
+  }
+
+  #sso-full-widget .sso-nav-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    background-color: #8E5642;
+    color: #FFFFFF;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    transition: all 0.2s ease;
+  }
+  #sso-full-widget .sso-nav-btn:hover {
+    background-color: #724332;
+  }
+
+  #sso-full-widget .sso-nav-mobile-toggle {
+    display: none;
+    font-size: 22px;
+    color: #2B2623;
+  }
+
+  /* 모바일 네비게이션 드롭다운 */
+  #sso-full-widget .sso-nav-mobile-menu {
+    display: none;
+    background: #FAF8F5;
+    border-bottom: 1px solid #E8E5DF;
+    padding: 18px 24px 22px;
+  }
+  #sso-full-widget .sso-nav-mobile-menu.open {
+    display: block;
+  }
+  #sso-full-widget .sso-mobile-menu-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #sso-full-widget .sso-mobile-menu-link {
+    font-size: 15px;
+    font-weight: 600;
+    color: #2B2623;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  /* ==========================================================================
+     [섹션 0: 히어로 슬라이더]
+     ========================================================================== */
+  #sso-full-widget .sso-hero-section {
+    position: relative;
+    width: 100%;
+    height: 85vh;
+    min-height: 580px;
+    max-height: 880px;
+    overflow: hidden;
+    background-color: #1A1715;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #sso-full-widget .sso-hero-slides {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  #sso-full-widget .sso-hero-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #sso-full-widget .sso-hero-slide.active {
+    opacity: 0.75;
+  }
+
+  #sso-full-widget .sso-hero-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #sso-full-widget .sso-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(29, 25, 23, 0.3) 0%, rgba(29, 25, 23, 0.75) 100%);
+    z-index: 2;
+  }
+
+  #sso-full-widget .sso-hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: #FFFFFF;
+    max-width: 680px;
+    padding: 0 20px;
+  }
+
+  #sso-full-widget .sso-hero-badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(29, 25, 23, 0.45);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: #E8E5DF;
+  }
+
+  #sso-full-widget .sso-hero-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+  }
+
+  #sso-full-widget .sso-hero-tagline {
+    font-size: 15px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 30px;
+    display: block;
+  }
+
+  #sso-full-widget .sso-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 34px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(10px);
+    color: #FFFFFF;
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    transition: all 0.3s ease;
+  }
+  #sso-full-widget .sso-hero-btn:hover {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.6);
+    transform: translateY(-2px);
+  }
+
+  #sso-full-widget .sso-hero-controls {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #sso-full-widget .sso-hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  #sso-full-widget .sso-hero-dot.active {
+    width: 24px;
+    border-radius: 10px;
+    background: #E0C3A0;
+  }
+
+  /* ==========================================================================
+     [섹션 1: ABOUT SOSOWON JEJU]
+     ========================================================================== */
+  #sso-full-widget .sso-about-section {
+    background-color: #F6F4F0;
+    padding: 80px 0 72px;
+    border-bottom: 1px solid #E8E5DF;
+  }
+
+  #sso-full-widget .sso-grid-about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+
+  #sso-full-widget .sso-narrative-text {
+    margin-bottom: 28px;
+  }
+
+  #sso-full-widget .sso-paragraph {
+    font-size: 15px;
+    color: rgba(43, 38, 35, 0.85);
+    line-height: 1.85;
+    word-break: keep-all;
+  }
+
+  #sso-full-widget .sso-pt-sm {
+    margin-top: 14px;
+  }
+
+  #sso-full-widget .sso-badge-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+  }
+
+  #sso-full-widget .sso-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    border: 1px solid #DDD7CD;
+    color: #5A4D41;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  #sso-full-widget .sso-image-frame {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    background-color: #DDD7CD;
+  }
+
+  #sso-full-widget .sso-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.6s ease;
+  }
+
+  #sso-full-widget .sso-image-frame:hover .sso-cover-img {
+    transform: scale(1.03);
+  }
+
+  #sso-full-widget .sso-gold-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #E0C3A0;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+
+  #sso-full-widget .sso-desktop-img-badge {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: rgba(29, 25, 23, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #F6F4F0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  /* 모바일 이미지 하단 배지 (요청하신 정확한 디자인 & 텍스트) */
+  #sso-full-widget .sso-img-gradient-mobile {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 70px;
+    background: linear-gradient(to top, rgba(29, 25, 23, 0.85), rgba(29, 25, 23, 0.35) 60%, transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  #sso-full-widget .sso-mobile-img-bar {
+    position: absolute;
+    bottom: 10px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
+  }
+
+  #sso-full-widget .sso-glass-capsule {
+    background: rgba(29, 25, 23, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 4px 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  #sso-full-widget .sso-capsule-text {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #F6F4F0;
+    letter-spacing: -0.01em;
+  }
+
+  #sso-full-widget .sso-brand-tag {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.1em;
+  }
+
+  /* ==========================================================================
+     [섹션 2: ARCHITECTURAL PHILOSOPHY]
+     ========================================================================== */
+  #sso-full-widget .sso-philosophy-section {
+    background-color: #FFFFFF;
+    padding: 88px 0 96px;
+    border-bottom: 1px solid #E8E5DF;
+  }
+
+  #sso-full-widget .sso-showcase-banner {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 36px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  }
+
+  #sso-full-widget .sso-banner-img-wrap {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    overflow: hidden;
+    background-color: #DDD7CD;
+  }
+
+  #sso-full-widget .sso-banner-btn-pc {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    z-index: 2;
+  }
+
+  #sso-full-widget .sso-btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #D6CECA;
+    color: #8E5642;
+    font-size: 13.5px;
+    font-weight: 600;
+    backdrop-filter: blur(6px);
+    transition: all 0.3s ease;
+  }
+  #sso-full-widget .sso-btn-outline:hover {
+    background: #8E5642;
+    color: #FFFFFF;
+    border-color: #8E5642;
+  }
+
+  /* PC 카드 3열 */
+  #sso-full-widget .sso-desktop-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  #sso-full-widget .sso-desk-card {
+    background-color: #FAF8F5;
+    border: 1px solid #E8E5DF;
+    border-radius: 16px;
+    padding: 28px 24px;
+    transition: all 0.3s ease;
+  }
+  #sso-full-widget .sso-desk-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(142, 86, 66, 0.4);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.04);
+  }
+
+  #sso-full-widget .sso-desk-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  #sso-full-widget .sso-card-category {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #8E5642;
+    text-transform: uppercase;
+  }
+
+  #sso-full-widget .sso-mini-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: rgba(142, 86, 66, 0.5);
+  }
+
+  #sso-full-widget .sso-desk-card-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #2B2623;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+  #sso-full-widget .sso-desk-card-desc {
+    font-size: 13.5px;
+    color: rgba(43, 38, 35, 0.7);
+    line-height: 1.65;
+    word-break: keep-all;
+  }
+
+  /* 모바일 전용 01, 02, 03 리스트 (사진 없음) */
+  #sso-full-widget .sso-mobile-cards {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #sso-full-widget .sso-mobile-card-item {
+    background-color: #FAF8F5;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid #E8E5DF;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #sso-full-widget .sso-mobile-card-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-align: left;
+  }
+
+  #sso-full-widget .sso-num-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: rgba(142, 86, 66, 0.1);
+    color: #8E5642;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #sso-full-widget .sso-card-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #2B2623;
+    line-height: 1.35;
+  }
+
+  #sso-full-widget .sso-card-desc {
+    font-size: 12px;
+    color: rgba(43, 38, 35, 0.7);
+    margin-top: 2px;
+  }
+
+  #sso-full-widget .sso-mobile-btn-wrap {
+    margin-top: 20px;
+  }
+
+  #sso-full-widget .sso-btn-mobile-wide {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background-color: #F6F3EE;
+    border: 1px solid #DDD7CD;
+    color: #8E5642;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  #sso-full-widget .sso-btn-mobile-wide:active {
+    background-color: #8E5642;
+    color: #FFFFFF;
+  }
+
+  /* ==========================================================================
+     [섹션 3: OUR HERITAGE & EXPERIENCE]
+     ========================================================================== */
+  #sso-full-widget .sso-heritage-section {
+    background-color: #F6F4F0;
+    padding: 88px 0 96px;
+    border-bottom: 1px solid #E8E5DF;
+  }
+
+  #sso-full-widget .sso-exp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  #sso-full-widget .sso-exp-card {
+    background-color: #FAF8F5;
+    border-radius: 16px;
+    border: 1px solid #E5E0D8;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  #sso-full-widget .sso-exp-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(142, 86, 66, 0.4);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+  }
+
+  #sso-full-widget .sso-exp-thumb {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: #E2DBD1;
+  }
+
+  #sso-full-widget .sso-exp-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  #sso-full-widget .sso-exp-title {
+    font-family: 'Gowun Batang', serif;
+    font-size: 15.5px;
+    font-weight: 700;
+    color: #2B2623;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  #sso-full-widget .sso-exp-sub {
+    font-size: 12px;
+    color: rgba(43, 38, 35, 0.65);
+    line-height: 1.5;
+  }
+
+  #sso-full-widget .sso-exp-btn-wrap {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #E8E5DF;
+  }
+
+  #sso-full-widget .sso-exp-action-btn {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background-color: #F6F3EE;
+    border: 1px solid #E2DBD1;
+    color: #784735;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.2s ease;
+  }
+  #sso-full-widget .sso-exp-card:hover .sso-exp-action-btn {
+    background-color: #8E5642;
+    color: #FFFFFF;
+    border-color: #8E5642;
+  }
+
+  /* ==========================================================================
+     [섹션 4: SPATIAL COMFORT & AMENITIES (객실 공간 안내)]
+     ========================================================================== */
+  #sso-full-widget .sso-rooms-section {
+    background-color: #FFFFFF;
+    padding: 88px 0 96px;
+    border-bottom: 1px solid #E8E5DF;
+  }
+
+  #sso-full-widget .sso-space-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+
+  #sso-full-widget .sso-tab-btn {
+    padding: 10px 22px;
+    border-radius: 24px;
+    background: #FAF8F5;
+    border: 1px solid #E2DBD1;
+    color: #5A4D41;
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  #sso-full-widget .sso-tab-btn.active {
+    background: #8E5642;
+    color: #FFFFFF;
+    border-color: #8E5642;
+  }
+
+  #sso-full-widget .sso-space-card {
+    display: none;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 44px;
+    background: #FAF8F5;
+    border: 1px solid #E8E5DF;
+    border-radius: 20px;
+    padding: 32px;
+    align-items: center;
+  }
+  #sso-full-widget .sso-space-card.active {
+    display: grid;
+  }
+
+  #sso-full-widget .sso-space-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #sso-full-widget .sso-space-main-img {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 14px;
+    overflow: hidden;
+    background-color: #DDD7CD;
+  }
+
+  #sso-full-widget .sso-space-thumbs {
+    display: flex;
+    gap: 8px;
+  }
+
+  #sso-full-widget .sso-space-thumb-btn {
+    width: 72px;
+    height: 48px;
+    border-radius: 8px;
+    overflow: hidden;
+    opacity: 0.6;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+  }
+  #sso-full-widget .sso-space-thumb-btn.active {
+    opacity: 1;
+    border-color: #8E5642;
+  }
+
+  #sso-full-widget .sso-space-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+  }
+
+  #sso-full-widget .sso-space-spec-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 12px 0;
+  }
+
+  #sso-full-widget .sso-space-spec-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13.5px;
+    color: rgba(43, 38, 35, 0.85);
+  }
+
+  #sso-full-widget .sso-space-spec-tag {
+    font-weight: 600;
+    color: #8E5642;
+    min-width: 48px;
+  }
+
+  #sso-full-widget .sso-ritual-tip {
+    background: #FFFFFF;
+    border-left: 3px solid #8E5642;
+    padding: 12px 16px;
+    border-radius: 0 10px 10px 0;
+    font-size: 13px;
+    color: #5C554F;
+    line-height: 1.6;
+  }
+
+  /* ==========================================================================
+     [섹션 5: RESERVATION GUIDE & FAQ (이용안내 아코디언)]
+     ========================================================================== */
+  #sso-full-widget .sso-guide-section {
+    background-color: #F6F4F0;
+    padding: 88px 0 96px;
+    border-bottom: 1px solid #E8E5DF;
+  }
+
+  #sso-full-widget .sso-accordion-list {
+    max-width: 820px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  #sso-full-widget .sso-accordion-item {
+    background: #FFFFFF;
+    border: 1px solid #E8E5DF;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+  }
+
+  #sso-full-widget .sso-accordion-header {
+    width: 100%;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: #2B2623;
+    text-align: left;
+  }
+
+  #sso-full-widget .sso-accordion-chevron {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+    color: #8E5642;
+    flex-shrink: 0;
+  }
+  #sso-full-widget .sso-accordion-item.open .sso-accordion-chevron {
+    transform: rotate(180deg);
+  }
+
+  #sso-full-widget .sso-accordion-content {
+    display: none;
+    padding: 0 22px 20px;
+    font-size: 14px;
+    color: rgba(43, 38, 35, 0.8);
+    line-height: 1.7;
+    border-top: 1px solid #FAF8F5;
+  }
+  #sso-full-widget .sso-accordion-item.open .sso-accordion-content {
+    display: block;
+  }
+
+  /* ==========================================================================
+     [푸터 (FOOTER)]
+     ========================================================================== */
+  #sso-full-widget .sso-footer {
+    background-color: #1D1917;
+    color: #C7BEB7;
+    padding: 68px 0 48px;
+    font-size: 13px;
+  }
+
+  #sso-full-widget .sso-footer-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid #2E2723;
+  }
+
+  #sso-full-widget .sso-footer-brand-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    color: #E6DED8;
+    margin-bottom: 12px;
+  }
+
+  #sso-full-widget .sso-footer-check-pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background-color: #27211D;
+    border: 1px solid #3A322C;
+    color: #A89F98;
+    font-size: 11.5px;
+  }
+
+  #sso-full-widget .sso-footer-subhead {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #D6CECA;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  #sso-full-widget .sso-footer-info-p {
+    margin-bottom: 6px;
+    color: #A89F98;
+    line-height: 1.6;
+  }
+
+  #sso-full-widget .sso-footer-bottom {
+    padding-top: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11.5px;
+    color: #7A726C;
+  }
+
+  /* ==========================================================================
+     [반응형 모바일 미디어 쿼리 (max-width: 768px)]
+     ========================================================================== */
+  @media (max-width: 768px) {
+    #sso-full-widget .sso-container {
+      padding: 0 18px;
+    }
+
+    #sso-full-widget .sso-section-title {
+      font-size: 22px;
+    }
+
+    /* 네비게이션 모바일 */
+    #sso-full-widget .sso-nav-links,
+    #sso-full-widget .sso-nav-btn {
+      display: none;
+    }
+    #sso-full-widget .sso-nav-mobile-toggle {
+      display: block;
+    }
+
+    /* 히어로 모바일 */
+    #sso-full-widget .sso-hero-section {
+      height: 75vh;
+      min-height: 480px;
+    }
+    #sso-full-widget .sso-hero-title {
+      font-size: 28px;
+    }
+    #sso-full-widget .sso-hero-tagline {
+      font-size: 13px;
+      letter-spacing: 0.2em;
+    }
+
+    /* 섹션 1 모바일 */
+    #sso-full-widget .sso-about-section {
+      padding: 52px 0 44px;
+    }
+    #sso-full-widget .sso-grid-about {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    #sso-full-widget .sso-col-narrative {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    #sso-full-widget .sso-divider {
+      margin: 14px auto;
+    }
+    #sso-full-widget .sso-badge-group {
+      justify-content: center;
+    }
+    #sso-full-widget .sso-image-frame {
+      aspect-ratio: 16 / 11;
+    }
+
+    /* 섹션 2 모바일 */
+    #sso-full-widget .sso-philosophy-section {
+      padding: 52px 0 56px;
+    }
+    #sso-full-widget .sso-center-header {
+      margin-bottom: 28px;
+    }
+    #sso-full-widget .sso-showcase-banner {
+      margin-bottom: 20px;
+    }
+    #sso-full-widget .sso-banner-img-wrap {
+      aspect-ratio: 16 / 10;
+    }
+    #sso-full-widget .sso-mobile-cards {
+      display: flex !important;
+    }
+
+    /* 섹션 3 모바일 */
+    #sso-full-widget .sso-heritage-section {
+      padding: 52px 0 56px;
+    }
+    #sso-full-widget .sso-exp-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    #sso-full-widget .sso-exp-content {
+      padding: 12px;
+    }
+    #sso-full-widget .sso-exp-title {
+      font-size: 14px;
+    }
+    #sso-full-widget .sso-exp-sub {
+      font-size: 11.5px;
+    }
+    #sso-full-widget .sso-exp-action-btn {
+      padding: 6px 8px;
+      font-size: 11px;
+    }
+
+    /* 섹션 4 모바일 */
+    #sso-full-widget .sso-rooms-section {
+      padding: 52px 0 56px;
+    }
+    #sso-full-widget .sso-space-card.active {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 20px;
+    }
+
+    /* 섹션 5 모바일 */
+    #sso-full-widget .sso-guide-section {
+      padding: 52px 0 56px;
+    }
+
+    /* 푸터 모바일 */
+    #sso-full-widget .sso-footer {
+      padding: 48px 0 36px;
+      text-align: center;
+    }
+    #sso-full-widget .sso-footer-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    #sso-full-widget .sso-footer-bottom {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+</style>
+
+<!-- [2. DIV] 아임웹 전용 고유 HTML 구조 (#sso-full-widget) -->
+<div id="sso-full-widget">
+
+  <!-- ==========================================
+       [NAVBAR] 상단 네비게이션 헤더
+       ========================================== -->
+  <header class="sso-navbar">
+    <div class="sso-container">
+      <div class="sso-nav-inner">
+        <a href="#sso-hero" class="sso-nav-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+          <span>소소원</span>
+        </a>
+
+        <!-- 데스크톱 메뉴 -->
+        <nav class="sso-nav-links">
+          <a href="#sso-about" class="sso-nav-link">소개</a>
+          <a href="#sso-philosophy" class="sso-nav-link">건축철학</a>
+          <a href="#sso-heritage" class="sso-nav-link">체험</a>
+          <a href="#sso-rooms" class="sso-nav-link">객실</a>
+          <a href="#sso-guide" class="sso-nav-link">이용안내</a>
+        </nav>
+
+        <a href="#sso-rooms" class="sso-nav-btn">예약 둘러보기</a>
+
+        <!-- 모바일 햄버거 토글 -->
+        <button class="sso-nav-mobile-toggle" id="ssoNavToggle" aria-label="메뉴 열기">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 모바일 드롭다운 메뉴 -->
+    <div class="sso-nav-mobile-menu" id="ssoMobileMenu">
+      <ul class="sso-mobile-menu-list">
+        <li><a href="#sso-about" class="sso-mobile-menu-link" onclick="ssoCloseMobileMenu()">소개 (ABOUT) <span>&rarr;</span></a></li>
+        <li><a href="#sso-philosophy" class="sso-mobile-menu-link" onclick="ssoCloseMobileMenu()">건축철학 <span>&rarr;</span></a></li>
+        <li><a href="#sso-heritage" class="sso-mobile-menu-link" onclick="ssoCloseMobileMenu()">힐링 체험 <span>&rarr;</span></a></li>
+        <li><a href="#sso-rooms" class="sso-mobile-menu-link" onclick="ssoCloseMobileMenu()">객실 공간 (STAY) <span>&rarr;</span></a></li>
+        <li><a href="#sso-guide" class="sso-mobile-menu-link" onclick="ssoCloseMobileMenu()">이용안내 & FAQ <span>&rarr;</span></a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- ==========================================
+       [SECTION 0] 히어로 슬라이더 (HERO)
+       ========================================== -->
+  <section class="sso-hero-section" id="sso-hero">
+    <div class="sso-hero-slides" id="ssoHeroSlides">
+      <!-- 슬라이드 1 -->
+      <div class="sso-hero-slide active">
+        <!-- 아임웹 이미지 URL 입력 공간: 히어로 1 (외관) -->
+        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1800&q=80" alt="소소원 외관 전경" />
+      </div>
+      <!-- 슬라이드 2 -->
+      <div class="sso-hero-slide">
+        <!-- 아임웹 이미지 URL 입력 공간: 히어로 2 (침실) -->
+        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1800&q=80" alt="소소원 침실" />
+      </div>
+      <!-- 슬라이드 3 -->
+      <div class="sso-hero-slide">
+        <!-- 아임웹 이미지 URL 입력 공간: 히어로 3 (온수 스파) -->
+        <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1800&q=80" alt="소소원 온수 노천탕" />
+      </div>
+      <!-- 슬라이드 4 -->
+      <div class="sso-hero-slide">
+        <!-- 아임웹 이미지 URL 입력 공간: 히어로 4 (다도실) -->
+        <img src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1800&q=80" alt="소소원 다도실" />
+      </div>
+    </div>
+
+    <div class="sso-hero-overlay"></div>
+
+    <div class="sso-hero-content">
+      <div class="sso-hero-badge">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+      </div>
+      <h1 class="sso-hero-title">소소원</h1>
+      <span class="sso-hero-tagline">제주 애월 독채 프라이빗 스테이</span>
+      <a href="#sso-about" class="sso-hero-btn">
+        <span>소소원 둘러보기</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- 인디케이터 닷 -->
+    <div class="sso-hero-controls" id="ssoHeroDots">
+      <span class="sso-hero-dot active" onclick="ssoGoSlide(0)"></span>
+      <span class="sso-hero-dot" onclick="ssoGoSlide(1)"></span>
+      <span class="sso-hero-dot" onclick="ssoGoSlide(2)"></span>
+      <span class="sso-hero-dot" onclick="ssoGoSlide(3)"></span>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       [SECTION 1] ABOUT SOSOWON JEJU
+       ========================================== -->
+  <section class="sso-about-section" id="sso-about">
+    <div class="sso-container">
+      <div class="sso-grid-about">
+        
+        <!-- 좌측 소개 내러티브 컬럼 -->
+        <div class="sso-col-narrative">
+          <div class="sso-header-group">
+            <span class="sso-eyebrow">ABOUT SOSOWON JEJU</span>
+            
+            <h2 class="sso-section-title">
+              <!-- 모바일 전용 타이틀 -->
+              <span class="sso-mobile-only">자연을 품은 돌담 스테이</span>
+              <!-- PC 전용 타이틀 -->
+              <span class="sso-desktop-only">돌담 너머 고요와 온전한 쉼, 소소원</span>
+            </h2>
+            
+            <div class="sso-divider"></div>
+          </div>
+
+          <div class="sso-narrative-text">
+            <!-- 문단 1 -->
+            <p class="sso-paragraph">
+              <!-- 모바일 전용 줄바꿈 적용 문단 -->
+              <span class="sso-mobile-only">
+                소소원은 맑은 바람과 고즈넉한 제주 먹돌담이<br>
+                감싸 안은 애월 납읍리의 프라이빗 독채 안식처입니다.<br>
+                오직 하루 한 팀만을 위해 열린 정원과 아늑한 공간에서, 일상의 번잡함을 내려놓고 온전한<br>
+                평온에 머물러 보세요.
+              </span>
+              <!-- PC 전용 문단 -->
+              <span class="sso-desktop-only">
+                소소원은 맑은 바람과 고즈넉한 제주 먹돌담이 감싸 안은 애월 납읍리의 프라이빗 독채 안식처입니다. 오직 하루 한 팀만을 위해 열린 정원과 아늑한 공간에서, 일상의 번잡함을 내려놓고 온전한 평온에 머물러 보세요.
+              </span>
+            </p>
+            
+            <!-- 문단 2 (PC에서만 노출, 모바일에서는 삭제) -->
+            <p class="sso-paragraph sso-desktop-only sso-pt-sm">
+              사계절 따스한 야외 온수 노천 스파와 명인의 유기농 잎차 다도, 노을빛 아래 즐기는 돌담 바베큐까지, 지친 몸과 마음에 진정한 쉼표를 선물해 보세요.
+            </p>
+          </div>
+
+          <!-- 핵심 특징 배지 3종 -->
+          <div class="sso-badge-group">
+            <span class="sso-pill-badge">하루 1팀 독채 프라이빗</span>
+            <span class="sso-pill-badge">명인다원 웰컴 잎차 다도</span>
+            <span class="sso-pill-badge">노을빛 돌담 정원 바베큐</span>
+          </div>
+        </div>
+
+        <!-- 우측 대표 사진 컬럼 -->
+        <div class="sso-col-photo">
+          <div class="sso-image-frame">
+            <!-- 아임웹 이미지 URL 입력 공간 1 : 대표 소개 이미지 -->
+            <img 
+              src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80" 
+              alt="소소원 돌담과 독채 전경" 
+              class="sso-cover-img"
+            />
+            
+            <!-- 모바일 전용 하단 그라디언트 및 배지 요소 -->
+            <div class="sso-img-gradient-mobile sso-mobile-only"></div>
+            <div class="sso-mobile-img-bar sso-mobile-only">
+              <!-- 모바일 좌측 디자인 배지 (골드 도트 + 글래스모피즘 + 요청 문구) -->
+              <div class="sso-glass-capsule">
+                <span class="sso-gold-dot"></span>
+                <span class="sso-capsule-text">제주 돌담 속 아늑한 안식처</span>
+              </div>
+              <!-- 모바일 우측 브랜드 태그 -->
+              <span class="sso-brand-tag">소소원</span>
+            </div>
+
+            <!-- PC 전용 좌측 하단 배지 -->
+            <div class="sso-desktop-img-badge sso-desktop-only">
+              <span class="sso-gold-dot"></span>
+              <span>자연을 품은 고즈넉한 돌담 스테이</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       [SECTION 2] ARCHITECTURAL PHILOSOPHY
+       ========================================== -->
+  <section class="sso-philosophy-section" id="sso-philosophy">
+    <div class="sso-container">
+      
+      <!-- 건축 철학 헤더 -->
+      <div class="sso-center-header">
+        <span class="sso-eyebrow">ARCHITECTURAL PHILOSOPHY</span>
+        <h3 class="sso-section-title">
+          <span class="sso-mobile-only">자연과 어우러져 편안하게<br>머무는 공간</span>
+          <span class="sso-desktop-only">자연과 어우러져 편안하게 머무는 공간</span>
+        </h3>
+        <div class="sso-divider sso-center-divider"></div>
+        <p class="sso-header-sub">
+          <span class="sso-mobile-only">제주의 돌담과 자연 속에서 일상을 내려놓고<br>온전한 휴식을 누려보세요.</span>
+          <span class="sso-desktop-only">제주의 돌담과 자연 속에서 일상을 내려놓고 온전한 휴식을 누려보세요.</span>
+        </p>
+      </div>
+
+      <!-- 와이드 건축 쇼케이스 배너 -->
+      <div class="sso-showcase-banner">
+        <div class="sso-banner-img-wrap">
+          <!-- 아임웹 이미지 URL 입력 공간 2 : 건축 쇼케이스 배너 이미지 -->
+          <img 
+            src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80" 
+            alt="소소원 건축 및 돌담 전경" 
+            class="sso-cover-img"
+          />
+        </div>
+
+        <!-- PC 전용: 쇼케이스 이미지 우측 하단 버튼 -->
+        <div class="sso-banner-btn-pc sso-desktop-only">
+          <a href="#sso-rooms" class="sso-btn-outline">
+            <span>소소원 공간 자세히 둘러보기</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- 모바일 전용: 간략한 핵심 리스트 (사진 미포함, 01/02/03 리스트) -->
+      <div class="sso-mobile-cards sso-mobile-only">
+        <!-- 01 -->
+        <div class="sso-mobile-card-item">
+          <div class="sso-mobile-card-left">
+            <span class="sso-num-circle">01</span>
+            <div class="sso-mobile-card-text">
+              <h4 class="sso-card-title">돌담 정원 & 바베큐</h4>
+              <p class="sso-card-desc">노을빛 아래 프라이빗 바베큐</p>
+            </div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"/></svg>
+        </div>
+
+        <!-- 02 -->
+        <div class="sso-mobile-card-item">
+          <div class="sso-mobile-card-left">
+            <span class="sso-num-circle">02</span>
+            <div class="sso-mobile-card-text">
+              <h4 class="sso-card-title">사계절 온수 노천 스파</h4>
+              <p class="sso-card-desc">별빛 아래 따뜻한 야외 스파</p>
+            </div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+        </div>
+
+        <!-- 03 -->
+        <div class="sso-mobile-card-item">
+          <div class="sso-mobile-card-left">
+            <span class="sso-num-circle">03</span>
+            <div class="sso-mobile-card-text">
+              <h4 class="sso-card-title">정갈한 다도 & 시네마</h4>
+              <p class="sso-card-desc">명인 잎차와 대형 빔프로젝터</p>
+            </div>
+          </div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+      </div>
+
+      <!-- PC 전용: 3열 카드 그리드 -->
+      <div class="sso-desktop-cards sso-desktop-only">
+        <!-- Pillar 1 -->
+        <div class="sso-desk-card">
+          <div class="sso-desk-card-head">
+            <span class="sso-card-category">PRIVATE GARDEN</span>
+            <span class="sso-mini-dot"></span>
+          </div>
+          <h4 class="sso-desk-card-title">돌담 정원 & 감성 바베큐</h4>
+          <p class="sso-desk-card-desc">제주의 싱그러운 아침 커피와 저녁 노을빛 아래 프라이빗 바베큐.</p>
+        </div>
+
+        <!-- Pillar 2 -->
+        <div class="sso-desk-card">
+          <div class="sso-desk-card-head">
+            <span class="sso-card-category">OUTDOOR SPA</span>
+            <span class="sso-mini-dot"></span>
+          </div>
+          <h4 class="sso-desk-card-title">별빛 아래 사계절 온수 노천탕</h4>
+          <p class="sso-desk-card-desc">제주 밤하늘의 쏟아지는 별빛 아래 누리는 사계절 따뜻한 야외 온수 스파.</p>
+        </div>
+
+        <!-- Pillar 3 -->
+        <div class="sso-desk-card">
+          <div class="sso-desk-card-head">
+            <span class="sso-card-category">TEA & CINEMA</span>
+            <span class="sso-mini-dot"></span>
+          </div>
+          <h4 class="sso-desk-card-title">정갈한 다도와 아늑한 감성 시네마</h4>
+          <p class="sso-desk-card-desc">돌담을 바라보며 음미하는 명인다원 잎차와 대형 스크린 빔프로젝터 영화 한 편.</p>
+        </div>
+      </div>
+
+      <!-- 모바일 전용: 카드박스 아래로 이동된 둘러보기 버튼 -->
+      <div class="sso-mobile-btn-wrap sso-mobile-only">
+        <a href="#sso-rooms" class="sso-btn-mobile-wide">
+          <span>소소원 공간 자세히 둘러보기</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       [SECTION 3] OUR HERITAGE & EXPERIENCE
+       ========================================== -->
+  <section class="sso-heritage-section" id="sso-heritage">
+    <div class="sso-container">
+      
+      <!-- 헤더 -->
+      <div class="sso-center-header">
+        <span class="sso-eyebrow">OUR HERITAGE & EXPERIENCE</span>
+        <h3 class="sso-section-title">
+          <span class="sso-mobile-only">소소원의 대표 힐링 체험</span>
+          <span class="sso-desktop-only">소소원에서 마주하는 온전한 쉼</span>
+        </h3>
+        <p class="sso-header-sub">
+          <!-- 모바일: '고요한' 단어 삭제된 문구 -->
+          <span class="sso-mobile-only">
+            제주의 풍경 속에서 일상을 비우고<br>몸과 마음의 온전한 쉼을 경험해 보세요.
+          </span>
+          <!-- PC 문구 -->
+          <span class="sso-desktop-only">
+            제주의 고요한 풍경 속에서 일상을 비우고 몸과 마음의 온전한 쉼을 경험해 보세요.
+          </span>
+        </p>
+      </div>
+
+      <!-- 4가지 대표 체험 카드 그리드 (모바일 2열 / PC 4열) -->
+      <div class="sso-exp-grid">
+        
+        <!-- Experience 1: 다도 -->
+        <div class="sso-exp-card" onclick="ssoScrollTo('sso-rooms')">
+          <div class="sso-exp-thumb">
+            <!-- 아임웹 이미지 URL 입력 공간 3 : 다도 체험 이미지 -->
+            <img 
+              src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80" 
+              alt="명인 유기농 잎차 다도" 
+              class="sso-cover-img"
+            />
+          </div>
+          <div class="sso-exp-content">
+            <div class="sso-exp-top">
+              <h4 class="sso-exp-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <span>웰컴 다도 명상</span>
+              </h4>
+              <p class="sso-exp-sub">
+                <span class="sso-mobile-only">유기농 잎차 다도</span>
+                <span class="sso-desktop-only">제주 명인 유기농 잎차 티타임</span>
+              </p>
+            </div>
+            <div class="sso-exp-btn-wrap">
+              <div class="sso-exp-action-btn">
+                <span class="sso-mobile-only">자세히보기</span>
+                <span class="sso-desktop-only">다도 체험 자세히보기</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience 2: 요가 -->
+        <div class="sso-exp-card" onclick="ssoScrollTo('sso-rooms')">
+          <div class="sso-exp-thumb">
+            <!-- 아임웹 이미지 URL 입력 공간 4 : 요가 체험 이미지 -->
+            <img 
+              src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=600&q=80" 
+              alt="모닝 정원 요가 & 싱잉볼" 
+              class="sso-cover-img"
+            />
+          </div>
+          <div class="sso-exp-content">
+            <div class="sso-exp-top">
+              <h4 class="sso-exp-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+                <span>아침 정원 요가</span>
+              </h4>
+              <p class="sso-exp-sub">
+                <span class="sso-mobile-only">싱잉볼과 돌담 명상</span>
+                <span class="sso-desktop-only">싱잉볼 소리와 돌담 아침 명상</span>
+              </p>
+            </div>
+            <div class="sso-exp-btn-wrap">
+              <div class="sso-exp-action-btn">
+                <span class="sso-mobile-only">자세히보기</span>
+                <span class="sso-desktop-only">요가 체험 자세히보기</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience 3: 바베큐 -->
+        <div class="sso-exp-card" onclick="ssoScrollTo('sso-rooms')">
+          <div class="sso-exp-thumb">
+            <!-- 아임웹 이미지 URL 입력 공간 5 : 바베큐 디너 이미지 -->
+            <img 
+              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80" 
+              alt="가든 야외 바베큐" 
+              class="sso-cover-img"
+            />
+          </div>
+          <div class="sso-exp-content">
+            <div class="sso-exp-top">
+              <h4 class="sso-exp-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"/></svg>
+                <span>가든 야외 바베큐</span>
+              </h4>
+              <p class="sso-exp-sub">
+                <span class="sso-mobile-only">프라이빗 가든 디너</span>
+                <span class="sso-desktop-only">저녁 노을빛 아래 프라이빗 디너</span>
+              </p>
+            </div>
+            <div class="sso-exp-btn-wrap">
+              <div class="sso-exp-action-btn">
+                <span class="sso-mobile-only">자세히보기</span>
+                <span class="sso-desktop-only">야외 바베큐 자세히보기</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Experience 4: 스파 -->
+        <div class="sso-exp-card" onclick="ssoScrollTo('sso-rooms')">
+          <div class="sso-exp-thumb">
+            <!-- 아임웹 이미지 URL 입력 공간 6 : 노천 스파 이미지 -->
+            <img 
+              src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=600&q=80" 
+              alt="야외 온수 노천 스파" 
+              class="sso-cover-img"
+            />
+          </div>
+          <div class="sso-exp-content">
+            <div class="sso-exp-top">
+              <h4 class="sso-exp-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8E5642" stroke-width="2"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+                <span class="sso-mobile-only">야외 노천 스파</span>
+                <span class="sso-desktop-only">야외 온수 노천 스파</span>
+              </h4>
+              <p class="sso-exp-sub">
+                <span class="sso-mobile-only">사계절 따스한 힐링</span>
+                <span class="sso-desktop-only">사계절 38~40℃ 따스한 힐링</span>
+              </p>
+            </div>
+            <div class="sso-exp-btn-wrap">
+              <div class="sso-exp-action-btn">
+                <span class="sso-mobile-only">자세히보기</span>
+                <span class="sso-desktop-only">야외 스파 자세히보기</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       [SECTION 4] SPATIAL COMFORT & AMENITIES (객실)
+       ========================================== -->
+  <section class="sso-rooms-section" id="sso-rooms">
+    <div class="sso-container">
+      
+      <div class="sso-center-header">
+        <span class="sso-eyebrow">SPATIAL COMFORT & AMENITIES</span>
+        <h3 class="sso-section-title">소소원의 사적인 공간들</h3>
+        <div class="sso-divider sso-center-divider"></div>
+        <p class="sso-header-sub">하루 오직 한 팀만을 위해 준비된 4가지 테마 공간을 감상해 보세요.</p>
+      </div>
+
+      <!-- 4가지 공간 탭 버튼 -->
+      <div class="sso-space-tabs">
+        <button class="sso-tab-btn active" onclick="ssoSwitchSpace(0)">SPACE 01 · 침실</button>
+        <button class="sso-tab-btn" onclick="ssoSwitchSpace(1)">SPACE 02 · 노천 스파</button>
+        <button class="sso-tab-btn" onclick="ssoSwitchSpace(2)">SPACE 03 · 다도실</button>
+        <button class="sso-tab-btn" onclick="ssoSwitchSpace(3)">SPACE 04 · 돌담 정원</button>
+      </div>
+
+      <!-- 공간 01: 침실 -->
+      <div class="sso-space-card active" id="ssoSpace0">
+        <div class="sso-space-gallery">
+          <div class="sso-space-main-img">
+            <!-- 아임웹 이미지 URL 입력 공간 7 : 침실 메인 -->
+            <img id="ssoSpace0Main" src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80" alt="침실 메인" class="sso-cover-img" />
+          </div>
+          <div class="sso-space-thumbs">
+            <button class="sso-space-thumb-btn active" onclick="ssoSetSpaceImg('ssoSpace0Main', 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=200&q=80" alt="침실 1" class="sso-cover-img" />
+            </button>
+            <button class="sso-space-thumb-btn" onclick="ssoSetSpaceImg('ssoSpace0Main', 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=200&q=80" alt="침실 2" class="sso-cover-img" />
+            </button>
+          </div>
+        </div>
+        <div class="sso-space-info">
+          <div>
+            <span class="sso-eyebrow">SPACE 01 · MASTER BEDROOM</span>
+            <h4 class="sso-section-title" style="font-size:24px;">린넨 침실 & 시네마</h4>
+            <p class="sso-card-desc" style="font-size:14px; margin-top:6px;">전면 통유리창으로 제주 돌담 정원을 마주하며 누리는 깊고 포근한 수면의 공간</p>
+          </div>
+          <ul class="sso-space-spec-list">
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">침구</span><span>프렌치 천연 린넨 커버 & 최고급 구스다운 킹 베딩</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">미디어</span><span>빔프로젝터 (넷플릭스/유튜브) & 마샬 블루투스 오디오</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">환경</span><span>정원 조망 통유리창 & 개별 지능형 온습도 공조 시스템</span></li>
+          </ul>
+          <div class="sso-ritual-tip">
+            💡 <strong>소소원 루틴 팁:</strong> 은은한 간접 조명 아래 마샬 스피커로 차분한 선율을 들으며 온전한 휴식을 누려보세요.
+          </div>
+        </div>
+      </div>
+
+      <!-- 공간 02: 노천 스파 -->
+      <div class="sso-space-card" id="ssoSpace1">
+        <div class="sso-space-gallery">
+          <div class="sso-space-main-img">
+            <!-- 아임웹 이미지 URL 입력 공간 8 : 노천 스파 메인 -->
+            <img id="ssoSpace1Main" src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80" alt="노천 스파 메인" class="sso-cover-img" />
+          </div>
+          <div class="sso-space-thumbs">
+            <button class="sso-space-thumb-btn active" onclick="ssoSetSpaceImg('ssoSpace1Main', 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=200&q=80" alt="스파 1" class="sso-cover-img" />
+            </button>
+            <button class="sso-space-thumb-btn" onclick="ssoSetSpaceImg('ssoSpace1Main', 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=200&q=80" alt="스파 2" class="sso-cover-img" />
+            </button>
+          </div>
+        </div>
+        <div class="sso-space-info">
+          <div>
+            <span class="sso-eyebrow">SPACE 02 · PRIVATE STONE SPA</span>
+            <h4 class="sso-section-title" style="font-size:24px;">야외 온수 노천탕</h4>
+            <p class="sso-card-desc" style="font-size:14px; margin-top:6px;">높은 화산석 돌담이 시선을 완벽히 감싸주는 단독 사계절 온수 스파</p>
+          </div>
+          <ul class="sso-space-spec-list">
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">온수풀</span><span>24시간 자율 온수 순환 노천탕 (38~40℃ 상시 유지)</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">수조</span><span>제주 장인이 현무암을 정성껏 다듬어 완성한 수제 석재 욕조</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">어메니티</span><span>천연 에센셜 허브 바스 솔트 & 도톰한 호텔식 순면 바스로브</span></li>
+          </ul>
+          <div class="sso-ritual-tip">
+            💡 <strong>소소원 루틴 팁:</strong> 정원의 달빛과 별빛을 바라보며 따스한 온수 속에서 여행의 피로를 녹여보세요.
+          </div>
+        </div>
+      </div>
+
+      <!-- 공간 03: 다도실 -->
+      <div class="sso-space-card" id="ssoSpace2">
+        <div class="sso-space-gallery">
+          <div class="sso-space-main-img">
+            <!-- 아임웹 이미지 URL 입력 공간 9 : 다도실 메인 -->
+            <img id="ssoSpace2Main" src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1200&q=80" alt="다도실 메인" class="sso-cover-img" />
+          </div>
+          <div class="sso-space-thumbs">
+            <button class="sso-space-thumb-btn active" onclick="ssoSetSpaceImg('ssoSpace2Main', 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=200&q=80" alt="다도 1" class="sso-cover-img" />
+            </button>
+            <button class="sso-space-thumb-btn" onclick="ssoSetSpaceImg('ssoSpace2Main', 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=200&q=80" alt="다도 2" class="sso-cover-img" />
+            </button>
+          </div>
+        </div>
+        <div class="sso-space-info">
+          <div>
+            <span class="sso-eyebrow">SPACE 03 · TEA ROOM</span>
+            <h4 class="sso-section-title" style="font-size:24px;">아날로그 다도실</h4>
+            <p class="sso-card-desc" style="font-size:14px; margin-top:6px;">돌담 정원을 바라보며 정성껏 차를 우리고 마음을 비우는 고요한 다도 공간</p>
+          </div>
+          <ul class="sso-space-spec-list">
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">웰컴티</span><span>제주 명인다원 최고급 유기농 잎차 & 발뮤다 티포트</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">다기</span><span>제주 도예 장인이 손수 빚은 전통 수제 도자기 다도 세트</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">사운드</span><span>LP 턴테이블 & 마음을 차분히 가라앉히는 감성 사운드</span></li>
+          </ul>
+          <div class="sso-ritual-tip">
+            💡 <strong>소소원 루틴 팁:</strong> 돌담 창가를 마주하고 따스한 잎차를 천천히 음미하며 번잡한 생각을 비워보세요.
+          </div>
+        </div>
+      </div>
+
+      <!-- 공간 04: 돌담 정원 -->
+      <div class="sso-space-card" id="ssoSpace3">
+        <div class="sso-space-gallery">
+          <div class="sso-space-main-img">
+            <!-- 아임웹 이미지 URL 입력 공간 10 : 돌담 정원 메인 -->
+            <img id="ssoSpace3Main" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80" alt="정원 메인" class="sso-cover-img" />
+          </div>
+          <div class="sso-space-thumbs">
+            <button class="sso-space-thumb-btn active" onclick="ssoSetSpaceImg('ssoSpace3Main', 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=200&q=80" alt="정원 1" class="sso-cover-img" />
+            </button>
+            <button class="sso-space-thumb-btn" onclick="ssoSetSpaceImg('ssoSpace3Main', 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80', this)">
+              <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=200&q=80" alt="정원 2" class="sso-cover-img" />
+            </button>
+          </div>
+        </div>
+        <div class="sso-space-info">
+          <div>
+            <span class="sso-eyebrow">SPACE 04 · JEJU STONE GARDEN</span>
+            <h4 class="sso-section-title" style="font-size:24px;">돌담 정원</h4>
+            <p class="sso-card-desc" style="font-size:14px; margin-top:6px;">2m 높이 화산석 돌담 안에서 제주의 바람과 맑은 공기를 오롯이 누리는 사적인 정원</p>
+          </div>
+          <ul class="sso-space-spec-list">
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">돌담</span><span>외부 시선과 소음을 완벽히 차단하는 2m 제주 화산석 먹돌담</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">정원길</span><span>고유의 푸른 식생과 계절 야생화가 피어나는 산책 오솔길</span></li>
+            <li class="sso-space-spec-item"><span class="sso-space-spec-tag">테라스</span><span>숲바람을 마주하는 야외 우드 티 테라스 & 야간 감성 조명</span></li>
+          </ul>
+          <div class="sso-ritual-tip">
+            💡 <strong>소소원 루틴 팁:</strong> 아침 새소리와 함께 돌담길을 가볍게 거닐며 제주의 맑은 숲공기를 들이마셔보세요.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       [SECTION 5] RESERVATION GUIDE & FAQ (이용안내 아코디언)
+       ========================================== -->
+  <section class="sso-guide-section" id="sso-guide">
+    <div class="sso-container">
+      
+      <div class="sso-center-header">
+        <span class="sso-eyebrow">RESERVATION GUIDE & FAQ</span>
+        <h3 class="sso-section-title">이용 안내 및 자주 묻는 질문</h3>
+        <div class="sso-divider sso-center-divider"></div>
+        <p class="sso-header-sub">편안한 여정을 위해 준비된 소소원의 운영 안내를 확인해 보세요.</p>
+      </div>
+
+      <div class="sso-accordion-list">
+        <!-- 아코디언 1 -->
+        <div class="sso-accordion-item">
+          <button class="sso-accordion-header" onclick="ssoToggleAccordion(this)">
+            <span>입/퇴실 안내 및 비대면 체크인</span>
+            <svg class="sso-accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sso-accordion-content">
+            <div style="display:flex; gap:8px; margin: 8px 0 12px;">
+              <span class="sso-pill-badge">체크인 16:00</span>
+              <span class="sso-pill-badge">체크아웃 11:00</span>
+            </div>
+            <p>• 소소원 제주는 예약하신 한 팀만을 위해 <strong>무인 비대면 시스템</strong>으로 안전하게 운영됩니다.</p>
+            <p>• 입실 당일 오전 11시경, 예약 시 입력하신 연락처로 객실 비밀번호 및 입실 세부 가이드를 상세 전송해 드립니다.</p>
+          </div>
+        </div>
+
+        <!-- 아코디언 2 -->
+        <div class="sso-accordion-item">
+          <button class="sso-accordion-header" onclick="ssoToggleAccordion(this)">
+            <span>투숙 인원 및 외부인 출입 규정</span>
+            <svg class="sso-accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sso-accordion-content">
+            <p>• 기준 인원 2인 / 최대 인원 6인까지 투숙 가능합니다. (기준 인원 초과 시 1인 1박당 추가 침구류 및 어메니티 비용 발생)</p>
+            <p>• 예약된 인원 외에 외부인의 무단 방문 및 숙박은 엄격히 제한됩니다.</p>
+          </div>
+        </div>
+
+        <!-- 아코디언 3 -->
+        <div class="sso-accordion-item">
+          <button class="sso-accordion-header" onclick="ssoToggleAccordion(this)">
+            <span>야외 온수 노천탕 요금 및 이용 수칙</span>
+            <svg class="sso-accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sso-accordion-content">
+            <p>• 사계절 24시간 추가 온수 비용 없이 <strong>전액 무료</strong>로 제공됩니다. (38~40℃ 상시 자동 유지)</p>
+            <p>• 현무암 석재 욕조 보호를 위해 제공해 드리는 입욕제(허브 바스 솔트) 외에 개인 입욕제(꽃잎, 거품제, 반짝이 등) 사용은 제한됩니다.</p>
+          </div>
+        </div>
+
+        <!-- 아코디언 4 -->
+        <div class="sso-accordion-item">
+          <button class="sso-accordion-header" onclick="ssoToggleAccordion(this)">
+            <span>바베큐 및 실내 취사 안내</span>
+            <svg class="sso-accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sso-accordion-content">
+            <p>• 목조 인테리어와 린넨 패브릭 보존을 위해 객실 내 육류 및 생선류 직화 구이는 금지됩니다.</p>
+            <p>• 야외 정원에서 프리미엄 안심 바베큐 그릴 이용이 가능하며, 객실 내에는 전자레인지, 냉장고, 와인잔, 식기류가 구비되어 있습니다.</p>
+          </div>
+        </div>
+
+        <!-- 아코디언 5 -->
+        <div class="sso-accordion-item">
+          <button class="sso-accordion-header" onclick="ssoToggleAccordion(this)">
+            <span>주차 공간 및 오시는 길 안내</span>
+            <svg class="sso-accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sso-accordion-content">
+            <p>• 소소원 단독 대문 앞 전용 주차장에 차량 2대까지 여유롭게 주차 가능합니다.</p>
+            <p>• 주소: 제주특별자치도 제주시 애월읍 납읍로2길 18 (내비게이션에 '소소원 제주' 검색)</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       [FOOTER] 하단 푸터
+       ========================================== -->
+  <footer class="sso-footer">
+    <div class="sso-container">
+      <div class="sso-footer-grid">
+        
+        <!-- 브랜드 & 운영 시간 -->
+        <div>
+          <div class="sso-footer-brand-title">SOSOWON JEJU</div>
+          <span class="sso-footer-check-pill">체크인 16:00 / 체크아웃 11:00</span>
+          <p style="margin-top:14px; font-size:12.5px; color:#A89F98; line-height:1.6;">
+            제주 애월 납읍리의 고즈넉한 돌담 속,<br>
+            오직 하루 한 팀만을 위한 프라이빗 독채 안식처.
+          </p>
+        </div>
+
+        <!-- 주소 및 연락처 -->
+        <div>
+          <div class="sso-footer-subhead">LOCATION & CONTACT</div>
+          <p class="sso-footer-info-p">📍 제주특별자치도 제주시 애월읍 납읍로2길 18</p>
+          <p class="sso-footer-info-p">📞 010-3829-4501 (고객 안내 09:00 ~ 21:00)</p>
+          <p class="sso-footer-info-p">✉️ contact@sosowon.co.kr</p>
+        </div>
+
+        <!-- 사업자 정보 -->
+        <div>
+          <div class="sso-footer-subhead">BUSINESS INFO</div>
+          <p class="sso-footer-info-p">상호: 소소원 제주</p>
+          <p class="sso-footer-info-p">대표: 고요한</p>
+          <p class="sso-footer-info-p">사업자등록번호: 120-00-12345</p>
+          <p class="sso-footer-info-p">통신판매업신고: 제2024-제주애월-0123호</p>
+        </div>
+
+      </div>
+
+      <div class="sso-footer-bottom">
+        <span>© SOSOWON JEJU. ALL RIGHTS RESERVED.</span>
+        <span>DESIGNED FOR TRANQUIL REST IN JEJU</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- [3. SCRIPT] 순수 Vanilla JavaScript 상호작용 로직 -->
+<script>
+  (function() {
+    // 1. 모바일 햄버거 메뉴 토글
+    var toggleBtn = document.getElementById('ssoNavToggle');
+    var mobileMenu = document.getElementById('ssoMobileMenu');
+    if (toggleBtn && mobileMenu) {
+      toggleBtn.addEventListener('click', function() {
+        mobileMenu.classList.toggle('open');
+      });
+    }
+
+    window.ssoCloseMobileMenu = function() {
+      if (mobileMenu) {
+        mobileMenu.classList.remove('open');
+      }
+    };
+
+    // 2. 히어로 슬라이더 로직
+    var currentSlide = 0;
+    var slides = document.querySelectorAll('#ssoHeroSlides .sso-hero-slide');
+    var dots = document.querySelectorAll('#ssoHeroDots .sso-hero-dot');
+    var slideTimer = null;
+
+    function showSlide(index) {
+      if (!slides.length) return;
+      currentSlide = (index + slides.length) % slides.length;
+      slides.forEach(function(slide, idx) {
+        if (idx === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+      dots.forEach(function(dot, idx) {
+        if (idx === currentSlide) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+    }
+
+    window.ssoGoSlide = function(index) {
+      showSlide(index);
+      resetSlideTimer();
+    };
+
+    function startSlideTimer() {
+      slideTimer = setInterval(function() {
+        showSlide(currentSlide + 1);
+      }, 4500);
+    }
+
+    function resetSlideTimer() {
+      if (slideTimer) clearInterval(slideTimer);
+      startSlideTimer();
+    }
+
+    startSlideTimer();
+
+    // 3. 객실 공간 (SPATIAL COMFORT) 탭 전환
+    window.ssoSwitchSpace = function(tabIdx) {
+      var tabBtns = document.querySelectorAll('.sso-space-tabs .sso-tab-btn');
+      var spaceCards = document.querySelectorAll('.sso-space-card');
+
+      tabBtns.forEach(function(btn, idx) {
+        if (idx === tabIdx) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+
+      spaceCards.forEach(function(card, idx) {
+        if (idx === tabIdx) card.classList.add('active');
+        else card.classList.remove('active');
+      });
+    };
+
+    // 4. 공간 갤러리 썸네일 클릭 시 메인 이미지 교체
+    window.ssoSetSpaceImg = function(targetImgId, newSrc, btnElement) {
+      var targetImg = document.getElementById(targetImgId);
+      if (targetImg) {
+        targetImg.src = newSrc;
+      }
+      if (btnElement && btnElement.parentElement) {
+        var thumbs = btnElement.parentElement.querySelectorAll('.sso-space-thumb-btn');
+        thumbs.forEach(function(t) { t.classList.remove('active'); });
+        btnElement.classList.add('active');
+      }
+    };
+
+    // 5. 이용안내 아코디언 토글
+    window.ssoToggleAccordion = function(headerBtn) {
+      var item = headerBtn.parentElement;
+      var isOpen = item.classList.contains('open');
+      
+      // 다른 모든 아코디언 닫기
+      var allItems = document.querySelectorAll('.sso-accordion-item');
+      allItems.forEach(function(el) {
+        el.classList.remove('open');
+      });
+
+      // 클릭한 아이템 토글
+      if (!isOpen) {
+        item.classList.add('open');
+      }
+    };
+
+    // 6. 스무스 스크롤 유틸리티
+    window.ssoScrollTo = function(targetId) {
+      var target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    // 7. 이미지 로드 에러 예외 방지
+    document.addEventListener("DOMContentLoaded", function() {
+      var images = document.querySelectorAll("#sso-full-widget img");
+      images.forEach(function(img) {
+        img.addEventListener("error", function() {
+          console.warn("[소소원 위젯] 이미지 경로를 확인해 주세요:", img.src);
+        });
+      });
+    });
+
+  })();
+</script>

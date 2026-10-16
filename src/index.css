@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Gowun Batang", Georgia, serif;
+  --font-serif: "Gowun Batang", Georgia, serif;
+  --font-display: "Gowun Batang", Georgia, serif;
+  --font-annotation: "Gowun Batang", serif;
+  
+  --color-warm-bg: #FFFFFF;
+  --color-warm-card: #FFFFFF;
+  --color-warm-surface: #F8F8F7;
+  --color-warm-border: #E8E5DF;
+
+  /* User Defined Point Colors - Aesthetic Jeju Sunset Terracotta Warm Ochre */
+  --color-point-main: #8E5642; /* 제주 돌담 노을빛 웜 테라코타 오커 */
+  --color-point-main-dark: #784735;
+  --color-point-main-light: #A46853;
+  
+  --color-point-sub: #2B2623; /* 따뜻하고 깊이있는 현무암 웜 다크 차콜 */
+  --color-point-sub-dark: #1E1A18;
+  --color-point-sub-light: #4A423D;
+  
+  --color-footer-bg: #22201E; /* 붉은 끼를 완전히 뺀 차분한 웜 차콜/다크 에스프레소 스톤 톤 */
+  --color-footer-border: #363330;
+}
+
+/* Force non-italic display unless explicitly styled */
+*, *::before, *::after {
+  font-style: normal !important;
+  font-family: "Gowun Batang", serif;
+}
+
+/* Base typography and body */
+body {
+  background-color: #FFFFFF;
+  color: #2B2623;
+  font-family: "Gowun Batang", serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ambient natural movement for all images without requiring hover (calm, subtle vertical breathing only, no horizontal left/right movement) */
+@keyframes ambientNatureDrift {
+  0% {
+    transform: scale(1.01) translateY(0);
+  }
+  50% {
+    transform: scale(1.035) translateY(-5px);
+  }
+  100% {
+    transform: scale(1.01) translateY(0);
+  }
+}
+
+img {
+  animation: ambientNatureDrift 14s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform;
+}
+
+:nth-child(even) > img,
+:nth-child(even) img {
+  animation-duration: 18s;
+  animation-delay: -4s;
+}
+
+:nth-child(3n) > img,
+:nth-child(3n) img {
+  animation-duration: 21s;
+  animation-delay: -9s;
+}
+
+

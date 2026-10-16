@@ -1,0 +1,6 @@
+{
+  "name": "Sosowon Jeju",
+  "description": "제주 고즈넉한 돌담 숲속에 머무는 단 한 팀만을 위한 고요한 프라이빗 독채 펜션 '소소원 제주' 공식 홈페이지",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
