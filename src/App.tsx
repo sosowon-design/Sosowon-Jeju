@@ -14,26 +14,20 @@ import FloatingInquiry from './components/FloatingInquiry';
 import { AMENITIES } from './data';
 
 export default function App() {
-  // Persist state in localStorage to prevent background jumping on refresh
-  const [currentPage, setCurrentPage] = useState<string>(() => {
-    return localStorage.getItem('sosowon_current_page') || 'home';
-  });
-
-  const [showHero, setShowHero] = useState<boolean>(() => {
-    const saved = localStorage.getItem('sosowon_show_hero');
-    return saved !== null ? JSON.parse(saved) : true;
-  });
-
+  // Always start from the main Hero page on initial load / refresh
+  const [currentPage, setCurrentPage] = useState<string>('home');
+  const [showHero, setShowHero] = useState<boolean>(true);
   const [refreshKey, setRefreshKey] = useState<number>(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    localStorage.setItem('sosowon_current_page', currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    localStorage.setItem('sosowon_show_hero', JSON.stringify(showHero));
-  }, [showHero]);
+    localStorage.removeItem('sosowon_current_page');
+    localStorage.removeItem('sosowon_show_hero');
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
 
   // If page changes or menu is clicked, refresh to top or target section
   const handlePageChange = (pageId: string, targetId?: string) => {

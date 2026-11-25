@@ -36,6 +36,8 @@ body {
   background-color: #FFFFFF;
   color: #2B2623;
   font-family: "Gowun Batang", serif !important;
+  word-break: keep-all;
+  overflow-wrap: break-word;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

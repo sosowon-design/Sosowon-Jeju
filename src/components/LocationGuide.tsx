@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronDown, Navigation, MapPin, Compass, Car, Bus, Key, ShieldCheck, Sparkles, Clock, Copy, Check } from 'lucide-react';
 
@@ -48,6 +48,30 @@ const LOCATION_FAQS: FaqItem[] = [
   },
 ];
 
+// Tablet formatted FAQ answers with tailored line breaks for optimal readability
+const TABLET_FAQ_ANSWERS: Record<number, ReactNode> = {
+  1: (
+    <>
+      제주 명인 다원의 최고급 유기농 웰컴 잎차와 전통 수제 도예 다기 세트, 온수 포트가 정갈하게 준비되어 있습니다.<br />다도 안내 카드가 함께 비치되어 있어 차를 처음 우려보시는 분들도 손쉽게 힐링 다도를 즐기실 수 있습니다.
+    </>
+  ),
+  2: (
+    <>
+      소소원의 쾌적한 목조 인테리어와 천연 린넨 베딩 보존을 위해 실내 육류/생선 구이 및 숯불 바베큐는 제한됩니다.<br />냉장고, 전자레인지, 전기포트, 감성 와인잔 및 고급 식기류가 완비되어 있어 포장 음식이나 와인, 다과를 안락하게<br />즐기실 수 있습니다.
+    </>
+  ),
+  4: (
+    <>
+      소소원 대문 바로 앞 전용 단독 주차 공간에 차량 2대까지 넉넉하게 주차하실 수 있습니다. 인근 3분 거리의 납읍리<br />공영 주차장에 급속 전기차 충전소가 마련되어 있어 편리하게 충전하실 수 있습니다.
+    </>
+  ),
+  5: (
+    <>
+      네, 가족 단위 투숙을 환영합니다. 다만 제주 자연 화산석 먹돌담과 야외 노천탕의 수조 턱 등이 조성되어 있으므로,<br />아이들이 정원이나 노천탕을 이용할 때는 보호자분의 세심한 동행과 안전 케어를 부탁드립니다.
+    </>
+  ),
+};
+
 export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuideProps) {
   const address = "제주특별자치도 제주시 애월읍 납읍로2길 18";
   const [copied, setCopied] = useState(false);
@@ -83,7 +107,7 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                   LOCATION & DIRECTIONS
                 </span>
                 
-                <h2 className="text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide mb-3">
+                <h2 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide mb-3">
                   오시는 길 & 주변 안내
                 </h2>
                 
@@ -108,14 +132,14 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
               className="lg:col-span-6 flex flex-col justify-center gap-3 shrink-0 border-t lg:border-t-0 lg:border-l border-[#E8E5DF] pt-6 lg:pt-0 lg:pl-8 text-[14px] font-sans font-medium text-[#2B2623]"
             >
               {/* SOSOWON ADDRESS Box (Positioned first as requested) */}
-              <div className="bg-[#FFFFFF] p-4 rounded-2xl border border-[#E8E5DF] shadow-2xs space-y-2.5">
-                <div className="flex items-center justify-between gap-2">
+              <div className="bg-[#FFFFFF] p-4 rounded-2xl border border-[#E8E5DF] shadow-2xs space-y-2.5 text-left md:text-center lg:text-left">
+                <div className="flex items-center justify-between md:hidden lg:flex lg:justify-between gap-2">
                   <span className="text-[11px] font-serif font-semibold text-[#8E5642] tracking-wider uppercase">
                     SOSOWON ADDRESS
                   </span>
                 </div>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
-                  <div className="flex items-center gap-2.5 overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center md:justify-center lg:justify-between justify-between gap-3 pt-1">
+                  <div className="flex items-center justify-center lg:justify-start gap-2.5 overflow-hidden">
                     <MapPin className="w-4 h-4 text-[#8E5642] shrink-0" />
                     <span className="text-[13.5px] font-medium text-[#2B2623] truncate">
                       {address}
@@ -187,7 +211,7 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
             <span className="text-[#8E5642] text-[12px] font-serif font-bold tracking-[0.28em] uppercase block">
               TRANSPORTATION GUIDE
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623]">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623]">
               <span className="md:hidden">제주 공항에서 오시는 길</span>
               <span className="hidden md:inline">제주 공항 및 주요 거점에서 오시는 길</span>
             </h3>
@@ -215,7 +239,7 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                 <div className="w-9 h-9 rounded-full bg-[#FFFFFF] border border-[#E8E5DF] flex items-center justify-center text-[#8E5642] shadow-2xs shrink-0">
                   <Car className="w-4.5 h-4.5" />
                 </div>
-                <h4 className="font-serif font-bold text-[16.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors">
+                <h4 className="font-serif font-bold text-[16.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors whitespace-nowrap">
                   렌터카 / 자가용
                 </h4>
               </div>
@@ -229,7 +253,12 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                 <li className="space-y-1 pt-1 border-t border-[#E8E5DF]/60">
                   <span className="text-[#8E5642] text-[11px] font-semibold block uppercase">내비게이션 검색어</span>
                   <p className="text-[#2B2623]/85 leading-relaxed">
-                    ‘소소원 제주’ 또는 도로명 ‘납읍로2길 18’ 검색
+                    <span className="hidden md:inline lg:hidden">
+                      ‘소소원 제주’ 또는 도로명<br />‘납읍로2길 18’ 검색
+                    </span>
+                    <span className="md:hidden lg:inline">
+                      ‘소소원 제주’ 또는 도로명 ‘납읍로2길 18’ 검색
+                    </span>
                   </p>
                 </li>
               </ul>
@@ -245,15 +274,21 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                 <div className="w-9 h-9 rounded-full bg-[#FFFFFF] border border-[#E8E5DF] flex items-center justify-center text-[#8E5642] shadow-2xs shrink-0">
                   <Bus className="w-4.5 h-4.5" />
                 </div>
-                <h4 className="font-serif font-bold text-[16.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors">
-                  대중교통 (급행/간선)
+                <h4 className="font-serif font-bold text-[16.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors whitespace-nowrap">
+                  <span className="hidden md:inline lg:hidden">대중교통 이용</span>
+                  <span className="md:hidden lg:inline">대중교통 (급행/간선)</span>
                 </h4>
               </div>
               <ul className="space-y-3 font-sans text-[13px]">
                 <li className="space-y-1">
                   <span className="text-[#8E5642] text-[11px] font-semibold block uppercase">공항 탑승 게이트</span>
                   <p className="text-[#2B2623]/85 leading-relaxed">
-                    공항 5번 게이트 앞 102번 급행버스 또는 291번 간선버스 탑승
+                    <span className="hidden md:inline lg:hidden">
+                      공항 5번 게이트 앞 102번<br />급행버스 또는 291번 간선버스<br />탑승
+                    </span>
+                    <span className="md:hidden lg:inline">
+                      공항 5번 게이트 앞 102번 급행버스 또는 291번 간선버스 탑승
+                    </span>
                   </p>
                 </li>
                 <li className="space-y-1 pt-1 border-t border-[#E8E5DF]/60">
@@ -275,15 +310,21 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                 <div className="w-9 h-9 rounded-full bg-[#FFFFFF] border border-[#E8E5DF] flex items-center justify-center text-[#8E5642] shadow-2xs shrink-0">
                   <Compass className="w-4.5 h-4.5" />
                 </div>
-                <h4 className="font-serif font-bold text-[16.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors">
-                  택시 / 콜밴 호출
+                <h4 className="font-serif font-bold text-[16.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors whitespace-nowrap">
+                  <span className="hidden md:inline lg:hidden">택시 / 콜밴</span>
+                  <span className="md:hidden lg:inline">택시 / 콜밴 호출</span>
                 </h4>
               </div>
               <ul className="space-y-3 font-sans text-[13px]">
                 <li className="space-y-1">
                   <span className="text-[#8E5642] text-[11px] font-semibold block uppercase">앱 목적지 설정</span>
                   <p className="text-[#2B2623]/85 leading-relaxed">
-                    카카오T / 우버 목적지에 ‘납읍로2길 18’ 입력 시 대문 바로 앞 하차
+                    <span className="hidden md:inline lg:hidden">
+                      카카오T / 우버 목적지에<br />‘납읍로2길 18’ 입력 시 대문<br />바로 앞 하차
+                    </span>
+                    <span className="md:hidden lg:inline">
+                      카카오T / 우버 목적지에 ‘납읍로2길 18’ 입력 시 대문 바로 앞 하차
+                    </span>
                   </p>
                 </li>
                 <li className="space-y-1 pt-1 border-t border-[#E8E5DF]/60">
@@ -314,7 +355,7 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
             <span className="text-[#8E5642] text-[12px] font-serif font-bold tracking-[0.28em] uppercase block">
               PARKING & PRIVATE ACCESS
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623]">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623]">
               <span className="md:hidden">전용 주차 및 프라이빗 입실</span>
               <span className="hidden md:inline">전용 단독 주차 & 프라이빗 입실 동선</span>
             </h3>
@@ -339,14 +380,27 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623]">대문 앞 단독 전용 주차</h4>
+                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623] whitespace-nowrap">
+                    <span className="hidden md:inline lg:hidden">단독 전용 주차</span>
+                    <span className="md:hidden lg:inline">대문 앞 단독 전용 주차</span>
+                  </h4>
                 </div>
               </div>
               <p className="text-[13px] text-[#2B2623]/80 font-sans leading-relaxed pt-1">
-                소소원 입구 대문 바로 앞에 우리 일행만을 위한 차량 2대 단독 주차 공간이 마련되어 있어 짐을 바로 내리기 편리합니다.
+                <span className="hidden md:inline lg:hidden">
+                  대문 바로 앞 일행 전용 차량<br />2대 단독 주차로 편리한 짐 내리기
+                </span>
+                <span className="md:hidden lg:inline">
+                  소소원 입구 대문 바로 앞에 우리 일행만을 위한 차량 2대 단독 주차 공간이 마련되어 있어 짐을 바로 내리기 편리합니다.
+                </span>
               </p>
               <div className="!mt-5 p-3 rounded-xl bg-[#F5EFE9] border border-[#E8DFD5] text-[12px] text-[#8E5642] font-sans font-medium">
-                💡 전기차는 차량 3분 거리 납읍리 공영주차장 급속 충전기를 이용하실 수 있습니다.
+                <span className="hidden md:inline lg:hidden">
+                  💡 차량 3분 거리 납읍리 공영주차장 급속 전기차<br />충전 가능
+                </span>
+                <span className="md:hidden lg:inline">
+                  💡 전기차는 차량 3분 거리 납읍리 공영주차장 급속 충전기를 이용하실 수 있습니다.
+                </span>
               </div>
             </div>
 
@@ -357,14 +411,27 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                   <Key className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623]">비대면 스마트 도어락 입실</h4>
+                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623] whitespace-nowrap">
+                    <span className="hidden md:inline lg:hidden">스마트 도어락</span>
+                    <span className="md:hidden lg:inline">비대면 스마트 도어락 입실</span>
+                  </h4>
                 </div>
               </div>
               <p className="text-[13px] text-[#2B2623]/80 font-sans leading-relaxed pt-1">
-                입실 당일 오전 11시에 전송된 안심 임시 비밀번호를 대문 및 현관 도어락에 입력하여 번거로운 체크인 절차 없이 바로 입실합니다.
+                <span className="hidden md:inline lg:hidden">
+                  당일 전송된 안심 임시 비밀번호로 별도 대면 절차 없이 바로 입실
+                </span>
+                <span className="md:hidden lg:inline">
+                  입실 당일 오전 11시에 전송된 안심 임시 비밀번호를 대문 및 현관 도어락에 입력하여 번거로운 체크인 절차 없이 바로 입실합니다.
+                </span>
               </p>
               <div className="!mt-5 p-3 rounded-xl bg-[#F5EFE9] border border-[#E8DFD5] text-[12px] text-[#8E5642] font-sans font-medium">
-                🔑 비밀번호 입력 후 터치패드 별(*)표를 누르시면 안온한 실내로 연결됩니다.
+                <span className="hidden md:inline lg:hidden">
+                  🔑 비밀번호 입력 후 별(*)표를 누르면 아늑한 실내로 연결
+                </span>
+                <span className="md:hidden lg:inline">
+                  🔑 비밀번호 입력 후 터치패드 별(*)표를 누르시면 아늑한 실내로 연결됩니다.
+                </span>
               </div>
             </div>
 
@@ -375,14 +442,27 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                   <Sparkles className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623]">사전 환경 세팅 & 호스트 케어</h4>
+                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623] whitespace-nowrap">
+                    <span className="hidden md:inline lg:hidden">환경 세팅 & 케어</span>
+                    <span className="md:hidden lg:inline">사전 환경 세팅 & 호스트 케어</span>
+                  </h4>
                 </div>
               </div>
               <p className="text-[13px] text-[#2B2623]/80 font-sans leading-relaxed pt-1">
-                입실 시각에 맞추어 쾌적한 온습도 공조와 야외 온수 스파(38~40℃)가 자동으로 준비되며, 카카오톡 채널로 상시 비대면 케어가 지원됩니다.
+                <span className="hidden md:inline lg:hidden">
+                  입실 시각 맞춤 온습도 공조와 온수 스파 준비 및 상시 비대면 케어
+                </span>
+                <span className="md:hidden lg:inline">
+                  입실 시각에 맞추어 쾌적한 온습도 공조와 야외 온수 스파(38~40℃)가 자동으로 준비되며, 카카오톡 채널로 상시 비대면 케어가 지원됩니다.
+                </span>
               </p>
               <div className="!mt-5 p-3 rounded-xl bg-[#F5EFE9] border border-[#E8DFD5] text-[12px] text-[#8E5642] font-sans font-medium">
-                🌿 은은한 제주 숲향과 따스한 웰컴 조명이 머무시는 순간을 반갑게 맞이합니다.
+                <span className="hidden md:inline lg:hidden">
+                  🌿 제주 숲향과 따스한<br />웰컴 조명이 머무는 순간을 맞이합니다
+                </span>
+                <span className="md:hidden lg:inline">
+                  🌿 은은한 제주 숲향과 따스한 웰컴 조명이 머무는 순간을 반갑게 맞이합니다.
+                </span>
               </div>
             </div>
 
@@ -405,7 +485,7 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
               <span className="md:hidden">FAQ & GUIDE</span>
               <span className="hidden md:inline">FREQUENTLY ASKED QUESTIONS</span>
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623]">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623]">
               <span className="md:hidden">자주 묻는 질문 & 안내</span>
               <span className="hidden md:inline">자주 묻는 질문 & 이용 안내</span>
             </h3>
@@ -458,7 +538,18 @@ export default function LocationGuide({ onNavigate: _onNavigate }: LocationGuide
                         className="overflow-hidden border-t border-[#E8E5DF] origin-top"
                       >
                         <div className="p-4 md:p-5 bg-[#FFFFFF] text-[#2B2623]/80 text-[13.5px] leading-relaxed font-sans font-normal">
-                          {faq.answer}
+                          {TABLET_FAQ_ANSWERS[idx] ? (
+                            <>
+                              <span className="hidden md:inline lg:hidden">
+                                {TABLET_FAQ_ANSWERS[idx]}
+                              </span>
+                              <span className="md:hidden lg:inline">
+                                {faq.answer}
+                              </span>
+                            </>
+                          ) : (
+                            faq.answer
+                          )}
                         </div>
                       </motion.div>
                     )}

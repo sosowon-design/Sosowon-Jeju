@@ -65,7 +65,7 @@ export default function FloatingInquiry({ isMobileMenuOpen = false }: FloatingIn
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-[74px] right-6 z-40 flex flex-col items-end"
+            className="fixed bottom-[80px] right-6 z-40 flex flex-col items-end"
           >
             <motion.button
               whileHover={{ scale: 1.08 }}
@@ -92,7 +92,7 @@ export default function FloatingInquiry({ isMobileMenuOpen = false }: FloatingIn
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 15, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="fixed bottom-[130px] right-6 z-50 w-[310px] sm:w-[330px] bg-[#FFFFFF] rounded-2xl shadow-2xl border border-[#E8E5DF] p-5 text-[#2B2623] font-sans"
+                className="fixed bottom-[136px] right-6 z-50 w-[310px] sm:w-[330px] bg-[#FFFFFF] rounded-2xl shadow-2xl border border-[#E8E5DF] p-5 text-[#2B2623] font-sans"
                 id="floating-inquiry-card"
               >
             {/* Header */}
@@ -184,7 +184,7 @@ export default function FloatingInquiry({ isMobileMenuOpen = false }: FloatingIn
 
               {/* Kakao inquiry card - Links to Kakao Channel Home */}
               <a
-                href="https://pf.kakao.com"
+                href="https://pf.kakao.com/_fhxirX"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="카카오톡 채널 홈 바로가기"

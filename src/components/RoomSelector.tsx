@@ -119,7 +119,7 @@ export default function RoomSelector({ onSelectRoom, onNavigate: _onNavigate }: 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-[26px] tracking-[0.02em] font-serif font-semibold text-[#2B2623]"
+                className="text-[24px] md:text-[26px] tracking-[0.02em] font-serif font-semibold text-[#2B2623]"
               >
                 <span className="md:hidden">소소원의 공간 안내</span>
                 <span className="hidden md:inline">소소원의 프라이빗 공간 안내</span>
@@ -129,7 +129,10 @@ export default function RoomSelector({ onSelectRoom, onNavigate: _onNavigate }: 
                 <span className="md:hidden">
                   하루 한 팀만을 위해 준비한 소소원의 공간에서<br />제주의 자연을 온전히 누려보세요
                 </span>
-                <span className="hidden md:inline">
+                <span className="hidden md:inline lg:hidden">
+                  오직 하루 한 팀만을 위해 준비한 소소원의 공간에서<br />제주의 자연을 온전히 누려보세요
+                </span>
+                <span className="hidden lg:inline">
                   오직 하루 한 팀만을 위해 준비한 소소원의 공간에서 제주의 자연을 온전히 누려보세요
                 </span>
               </p>
@@ -326,7 +329,7 @@ export default function RoomSelector({ onSelectRoom, onNavigate: _onNavigate }: 
             <span className="text-[#8E5642] text-[12px] font-serif font-bold tracking-[0.28em] uppercase block">
               CURATED OBJECTS & AMENITIES
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623]">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623]">
               <span className="md:hidden">비품 & 어메니티 안내</span>
               <span className="hidden md:inline">소소원의 정갈한 비품 & 어메니티 핵심 안내</span>
             </h3>
@@ -394,7 +397,10 @@ export default function RoomSelector({ onSelectRoom, onNavigate: _onNavigate }: 
               <div className="flex items-center justify-between border-b border-[#E8E5DF] pb-3.5">
                 <div>
                   <span className="text-[#8E5642] font-serif font-bold text-[11px] tracking-widest block uppercase">CATEGORY 02</span>
-                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623] mt-0.5 group-hover:text-[#8E5642] transition-colors">다도 & 커피 티타임</h4>
+                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623] mt-0.5 group-hover:text-[#8E5642] transition-colors">
+                    <span className="hidden md:inline lg:hidden">다도 & 커피</span>
+                    <span className="md:hidden lg:inline">다도 & 커피 티타임</span>
+                  </h4>
                 </div>
                 <div className="w-9 h-9 rounded-full bg-[#8E5642]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Coffee className="w-4.5 h-4.5 text-[#8E5642]" />
@@ -434,7 +440,10 @@ export default function RoomSelector({ onSelectRoom, onNavigate: _onNavigate }: 
               <div className="flex items-center justify-between border-b border-[#E8E5DF] pb-3.5">
                 <div>
                   <span className="text-[#8E5642] font-serif font-bold text-[11px] tracking-widest block uppercase">CATEGORY 03</span>
-                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623] mt-0.5 group-hover:text-[#8E5642] transition-colors">미디어 & 프리미엄 리빙</h4>
+                  <h4 className="font-serif font-bold text-[16px] text-[#2B2623] mt-0.5 group-hover:text-[#8E5642] transition-colors">
+                    <span className="hidden md:inline lg:hidden">미디어 & 리빙</span>
+                    <span className="md:hidden lg:inline">미디어 & 프리미엄 리빙</span>
+                  </h4>
                 </div>
                 <div className="w-9 h-9 rounded-full bg-[#8E5642]/10 flex items-center justify-center group-hover:scale-110 transition-transform">
                   <Film className="w-4.5 h-4.5 text-[#8E5642]" />

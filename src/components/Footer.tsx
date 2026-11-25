@@ -70,7 +70,7 @@ export default function Footer() {
 
                 {/* KakaoTalk */}
                 <a
-                  href="https://pf.kakao.com"
+                  href="https://pf.kakao.com/_fhxirX"
                   target="_blank"
                   rel="noreferrer"
                   className="w-9 h-9 border border-[#3A322C] bg-[#27211D] text-[#C7BEB7] rounded-full flex items-center justify-center hover:bg-[#8E5642] hover:text-white hover:border-[#8E5642] transition-all shadow-xs cursor-pointer"

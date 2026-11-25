@@ -120,7 +120,7 @@ export default function Hero({ onEnter }: HeroProps) {
         id="hero-bottom-left-social"
       >
         <a
-          href="https://pf.kakao.com"
+          href="https://pf.kakao.com/_fhxirX"
           target="_blank"
           rel="noreferrer"
           className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-[#9E5330] backdrop-blur-md border border-white/20 hover:border-[#9E5330] text-stone-200 hover:text-white flex items-center gap-2 transition-all duration-300 text-[11.5px] font-sans tracking-wider shadow-xs cursor-pointer"

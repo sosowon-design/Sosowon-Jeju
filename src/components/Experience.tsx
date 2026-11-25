@@ -56,11 +56,19 @@ const MOBILE_RITUAL_SUMMARIES: Record<string, string> = {
   'healing-spa': '38~40℃ 따뜻한 야외 노천탕에서 천연 아로마욕으로 피로를 풀어보세요.',
 };
 
+// Tablet slightly shortened descriptions for Stay Healing Rituals cards
+const TABLET_RITUAL_SUMMARIES: Record<string, string> = {
+  'healing-tea': '제주의 맑은 유기농 잎차를 정성껏 우려내며 돌담 창가에서 은은한 차 향과 깊은 평온을 누려보세요.',
+  'healing-yoga': '아침 햇살 비추는 돌담 정원에서 맑은 싱잉볼 소리와 함께 몸과 마음을 깨우며 하루를 시작해보세요.',
+  'healing-bbq': '연기 걱정 없는 프리미엄 무연 그릴로 야외 정원에서 소중한 사람들과 특별한 미식을 즐겨보세요.',
+  'healing-spa': '38~40℃로 따뜻하게 순환되는 야외 노천탕에서 천연 아로마 솔트와 함께 피로를 편안히 녹여보세요.',
+};
+
 const MOBILE_LOCAL_SUMMARIES: Record<string, string> = {
   'local-oreum': '황금빛 억새 능선과 탁 트인 서쪽 바다 산책로',
   'local-citrus': '유기농 감귤 수확과 달콤한 수제 감귤청 클래스',
-  'local-pottery': '제주 화산토로 빚는 나만의 감성 다기 원데이 클래스',
-  'local-coast': '화산석 바윗길과 에메랄드빛 바다를 잇는 해안 산책로',
+  'local-pottery': '제주 화산토로 빚는 나만의 다기 원데이 클래스',
+  'local-coast': '화산석 바윗길과 에메랄드빛 바다를 잇는 산책로',
 };
 
 const MOBILE_LOCAL_TITLES: Record<string, string> = {
@@ -145,7 +153,7 @@ export default function Experience({ onNavigate: _onNavigate }: ExperienceProps)
                 <span className="hidden md:inline">RESTFUL EXPERIENCES</span>
               </span>
 
-              <h2 className="text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide leading-tight mb-3">
+              <h2 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide leading-tight mb-3">
                 <span className="md:hidden">소소원만의 힐링 리추얼</span>
                 <span className="hidden md:inline">소소원의 온전한 쉼과 로컬 여정</span>
               </h2>
@@ -258,7 +266,7 @@ export default function Experience({ onNavigate: _onNavigate }: ExperienceProps)
             <span className="text-[#8E5642] text-[12px] font-serif font-bold tracking-[0.28em] uppercase block">
               STAY HEALING RITUALS
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623]">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623]">
               <span className="md:hidden">제주 자연 속 온전한 휴식</span>
               <span className="hidden md:inline">소소원에서 누리는 온전한 휴식</span>
             </h3>
@@ -306,7 +314,10 @@ export default function Experience({ onNavigate: _onNavigate }: ExperienceProps)
                         <span className="md:hidden break-keep">
                           {MOBILE_RITUAL_SUMMARIES[item.id] || item.desc}
                         </span>
-                        <span className="hidden md:inline">
+                        <span className="hidden md:inline lg:hidden break-keep">
+                          {TABLET_RITUAL_SUMMARIES[item.id] || item.desc}
+                        </span>
+                        <span className="hidden lg:inline">
                           {item.desc}
                         </span>
                       </p>
@@ -340,7 +351,7 @@ export default function Experience({ onNavigate: _onNavigate }: ExperienceProps)
               <span className="md:hidden">LOCAL JOURNEY</span>
               <span className="hidden md:inline">LOCAL CURATION & ATTRACTIONS</span>
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623]">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623]">
               <span className="md:hidden">제주 로컬 명소 & 체험</span>
               <span className="hidden md:inline">제주 로컬 명소 & 체험 여정</span>
             </h3>
@@ -442,7 +453,7 @@ export default function Experience({ onNavigate: _onNavigate }: ExperienceProps)
                       </h4>
                     </div>
                     <p className="text-[#2B2623]/75 text-[13px] md:text-[13.5px] font-sans leading-relaxed pt-1">
-                      <span className="md:hidden break-keep">
+                      <span className={`md:hidden ${currentLocal.id === 'local-coast' ? 'whitespace-nowrap text-[13px] tracking-[-0.025em]' : 'break-keep'}`}>
                         {MOBILE_LOCAL_SUMMARIES[currentLocal.id] || currentLocal.description}
                       </span>
                       <span className="hidden md:inline">
@@ -483,14 +494,14 @@ export default function Experience({ onNavigate: _onNavigate }: ExperienceProps)
                     </p>
                   </motion.div>
 
-                  {/* Highlights with refined compass icon instead of plain check */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                  {/* Highlights with refined middle dot and slightly tighter vertical spacing */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-2 gap-y-1 pt-0.5">
                     {currentLocal.highlights.map((hl, hIdx) => (
                       <motion.div 
                         key={hIdx}
                         whileHover={{ x: 3 }}
                         transition={{ duration: 0.15 }}
-                        className="flex items-center gap-2 text-[12px] text-[#2B2623]/85 font-sans p-1 rounded-md hover:bg-stone-50"
+                        className="flex items-center gap-2 text-[12px] text-[#2B2623]/85 font-sans py-0.5 px-1 rounded-md hover:bg-stone-50"
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-[#8E5642] shrink-0" />
                         <span className="md:hidden">{hl.replace(/노을\s*/g, '')}</span>

@@ -34,8 +34,8 @@ export default function Intro({ onNavigate }: IntroProps) {
                   ABOUT SOSOWON JEJU
                 </span>
 
-                {/* Title font size set to 26px as requested */}
-                <h2 className="text-[26px] font-serif font-semibold text-[#2B2623] tracking-tight leading-snug text-center lg:text-left">
+                {/* Title font size set to 24px on mobile, 26px on md+ */}
+                <h2 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623] tracking-tight leading-snug text-center lg:text-left">
                   <span className="md:hidden">
                     자연을 품은 돌담 스테이
                   </span>
@@ -51,8 +51,8 @@ export default function Intro({ onNavigate }: IntroProps) {
                 transition={{ duration: 0.6, delay: 0.15 }}
                 className="space-y-4 text-[#2B2623]/85 text-[14.5px] md:text-[15px] font-sans font-normal w-full"
               >
-                {/* Paragraphs with refined narrative copy - Center aligned on mobile, lower paragraph deleted on mobile */}
-                <div className="space-y-4 text-[#2B2623]/80 leading-[1.62] break-keep text-center md:text-left">
+                {/* Paragraphs with refined narrative copy - Center aligned on mobile and tablet, left on desktop */}
+                <div className="space-y-4 text-[#2B2623]/80 leading-[1.62] break-keep text-center md:text-center lg:text-left">
                   <p className="cursor-default">
                     <span className="md:hidden">
                       소소원은 맑은 바람과 고즈넉한 제주 먹돌담이<br />
@@ -60,13 +60,43 @@ export default function Intro({ onNavigate }: IntroProps) {
                       오직 하루 한 팀만을 위해 열린 정원과 아늑한 공간에서, 일상의 번잡함을 내려놓고 온전한<br />
                       평온에 머물러 보세요.
                     </span>
-                    <span className="hidden md:inline">
+                    <span className="hidden md:inline lg:hidden">
+                      소소원은 맑은 바람과 고즈넉한 제주 먹돌담이 감싸 안은 애월 납읍리의 프라이빗 독채 안식처입니다.
+                      <br className="my-1" />
+                      하루 한 팀만을 위해 열린 정원과 아늑한 공간에서, 일상의 번잡함을 내려놓고 온전한 평온에 머물러 보세요.
+                    </span>
+                    <span className="hidden lg:inline">
                       소소원은 맑은 바람과 고즈넉한 제주 먹돌담이 감싸 안은 애월 납읍리의 프라이빗 독채 안식처입니다. 오직 하루 한 팀만을 위해 열린 정원과 아늑한 공간에서, 일상의 번잡함을 내려놓고 온전한 평온에 머물러 보세요.
                     </span>
                   </p>
                   <p className="cursor-default pt-1.5 hidden md:block">
-                    사계절 따스한 야외 온수 노천 스파와 명인의 유기농 잎차 다도, 노을빛 아래 즐기는 돌담 바베큐까지, 지친 몸과 마음에 진정한 쉼표를 선물해 보세요.
+                    <span className="hidden md:inline lg:hidden">
+                      사계절 따스한 야외 온수 노천 스파와 명인의 유기농 잎차 다도, 노을빛 아래 즐기는
+                      <br className="my-1" />
+                      돌담 바베큐까지, 지친 몸과 마음에 진정한 쉼표를 선물해 보세요
+                    </span>
+                    <span className="hidden lg:inline">
+                      사계절 따스한 야외 온수 노천 스파와 명인의 유기농 잎차 다도, 노을빛 아래 즐기는 돌담 바베큐까지, 지친 몸과 마음에 진정한 쉼표를 선물해 보세요.
+                    </span>
                   </p>
+                </div>
+
+                {/* Mobile Only: Image positioned directly below body text */}
+                <div className="md:hidden w-full pt-2">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.97 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="overflow-hidden rounded-2xl relative aspect-[16/11] bg-stone-100 border border-[#E8E5DF] shadow-md group"
+                  >
+                    <img
+                      src={aboutMainImg}
+                      alt="소소원 돌담과 독채 전경"
+                      className="w-full h-full object-cover object-center group-hover:scale-101 transition-transform duration-700"
+                      referrerPolicy="no-referrer"
+                    />
+                  </motion.div>
                 </div>
 
                 {/* 3 Core Badges - CENTER ALIGNED on mobile, LEFT ALIGNED on desktop */}
@@ -96,8 +126,8 @@ export default function Intro({ onNavigate }: IntroProps) {
               </motion.div>
             </div>
 
-            {/* Right Photo Framing (Desktop and Mobile - reverted to original grid flow) */}
-            <div className="lg:col-span-6 w-full">
+            {/* Right Photo Framing (Tablet & Desktop - mobile uses inline placement below body) */}
+            <div className="hidden md:block lg:col-span-6 w-full">
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -112,21 +142,7 @@ export default function Intro({ onNavigate }: IntroProps) {
                   referrerPolicy="no-referrer"
                 />
                 
-                {/* Mobile Elements: Clean bottom gradient overlay (top elements removed per request) */}
-                <div className="md:hidden absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#1D1917]/85 via-[#1D1917]/35 to-transparent pointer-events-none" />
-                <div className="md:hidden absolute bottom-3.5 left-3.5 right-3.5 z-10 flex items-center justify-between gap-2 text-white">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1D1917]/75 backdrop-blur-md border border-white/20 shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#E0C3A0] shrink-0" />
-                    <span className="text-[11.5px] font-sans font-medium text-stone-100 tracking-tight">
-                      제주 돌담 속 아늑한 안식처
-                    </span>
-                  </div>
-                  <span className="text-[10px] font-sans px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/20 text-stone-200 shrink-0">
-                    소소원
-                  </span>
-                </div>
-
-                {/* PC Only Badge (100% Unchanged) */}
+                {/* PC/Tablet Only Badge (mobile image overlay text removed per request) */}
                 <div className="hidden md:flex absolute bottom-4 left-4 z-10 px-3.5 py-1.5 rounded-full bg-[#1D1917]/75 backdrop-blur-xs border border-white/20 text-[12px] font-sans font-medium text-white shadow-sm items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#E0C3A0]" />
                   <span>자연을 품은 고즈넉한 돌담 스테이</span>
@@ -153,9 +169,9 @@ export default function Intro({ onNavigate }: IntroProps) {
             <span className="text-[#8E5642] text-[12px] font-serif font-bold tracking-[0.28em] uppercase block">
               ARCHITECTURAL PHILOSOPHY
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide">
               <span className="md:hidden">
-                자연과 어우러져 편안하게<br />머무는 공간
+                자연과 어우러진 공간
               </span>
               <span className="hidden md:inline">
                 자연과 어우러져 편안하게 머무는 공간
@@ -183,7 +199,7 @@ export default function Intro({ onNavigate }: IntroProps) {
               />
             </div>
 
-            {/* Desktop Only: Repositioned button in bottom-right corner of image with point color text */}
+            {/* Desktop Only: Repositioned button in bottom-right corner of image with black text */}
             {onNavigate && (
               <div className="hidden md:block absolute bottom-6 right-6 z-10">
                 <button
@@ -191,7 +207,7 @@ export default function Intro({ onNavigate }: IntroProps) {
                     onNavigate('rooms');
                     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
                   }}
-                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-full bg-[#F6F3EE] hover:bg-[#8E5642] text-[#8E5642] hover:text-white text-[13.5px] font-sans font-medium transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.02] cursor-pointer border border-[#DDD7CD] hover:border-[#8E5642] group/btn"
+                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-full bg-[#F6F3EE] hover:bg-[#8E5642] text-black hover:text-white text-[13.5px] font-sans font-medium transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.02] cursor-pointer border border-[#DDD7CD] hover:border-[#8E5642] group/btn"
                 >
                   <span>소소원 공간 자세히 둘러보기</span>
                   <ArrowRight className="w-4 h-4 text-[#8E5642] group-hover/btn:text-white transition-colors" />
@@ -257,17 +273,23 @@ export default function Intro({ onNavigate }: IntroProps) {
               className="bg-[#FAF8F5] p-5 sm:p-7 rounded-2xl border border-[#E8E5DF] flex flex-col justify-between hover:border-[#8E5642]/50 hover:shadow-md transition-all group"
             >
               <div className="space-y-2.5 sm:space-y-3 text-left">
-                <div className="flex items-center justify-between border-b border-[#E8E5DF] pb-2.5">
-                  <span className="text-[11.5px] font-serif font-semibold tracking-wider text-[#8E5642] uppercase">
+                <div className="flex items-center justify-between md:justify-center lg:justify-between border-b border-[#E8E5DF] pb-2.5">
+                  <span className="text-[11.5px] font-serif font-semibold tracking-wider text-[#8E5642] uppercase text-left md:text-center lg:text-left">
                     PRIVATE GARDEN
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8E5642]/60 group-hover:bg-[#8E5642] transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#8E5642]/60 group-hover:bg-[#8E5642] transition-colors md:hidden lg:inline-block" />
                 </div>
-                <h4 className="text-[17px] sm:text-[18px] font-serif font-bold text-[#2B2623] tracking-tight leading-snug break-keep">
-                  돌담 정원 & 감성 바베큐
+                <h4 className="text-[17px] sm:text-[18px] md:text-[16px] lg:text-[18px] font-serif font-bold text-[#2B2623] tracking-tight leading-snug break-keep text-left md:text-center lg:text-left">
+                  <span className="hidden md:inline lg:hidden whitespace-nowrap">돌담 정원 & 바베큐</span>
+                  <span className="hidden lg:inline">돌담 정원 & 감성 바베큐</span>
                 </h4>
-                <p className="text-[13px] sm:text-[13.5px] text-[#2B2623]/75 font-sans leading-relaxed break-keep">
-                  제주의 싱그러운 아침 커피와 저녁 노을빛 아래 프라이빗 바베큐.
+                <p className="text-[13px] sm:text-[13.5px] text-[#2B2623]/75 font-sans leading-relaxed break-keep text-left md:text-center lg:text-left">
+                  <span className="hidden md:inline lg:hidden">
+                    제주의 싱그러운 아침 커피와 저녁 노을빛 아래 프라이빗 바베큐
+                  </span>
+                  <span className="md:hidden lg:inline">
+                    제주의 싱그러운 아침 커피와 저녁 노을빛 아래 프라이빗 바베큐.
+                  </span>
                 </p>
               </div>
             </motion.div>
@@ -281,17 +303,23 @@ export default function Intro({ onNavigate }: IntroProps) {
               className="bg-[#FAF8F5] p-5 sm:p-7 rounded-2xl border border-[#E8E5DF] flex flex-col justify-between hover:border-[#8E5642]/50 hover:shadow-md transition-all group"
             >
               <div className="space-y-2.5 sm:space-y-3 text-left">
-                <div className="flex items-center justify-between border-b border-[#E8E5DF] pb-2.5">
-                  <span className="text-[11.5px] font-serif font-semibold tracking-wider text-[#8E5642] uppercase">
+                <div className="flex items-center justify-between md:justify-center lg:justify-between border-b border-[#E8E5DF] pb-2.5">
+                  <span className="text-[11.5px] font-serif font-semibold tracking-wider text-[#8E5642] uppercase text-left md:text-center lg:text-left">
                     OUTDOOR SPA
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8E5642]/60 group-hover:bg-[#8E5642] transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#8E5642]/60 group-hover:bg-[#8E5642] transition-colors md:hidden lg:inline-block" />
                 </div>
-                <h4 className="text-[17px] sm:text-[18px] font-serif font-bold text-[#2B2623] tracking-tight leading-snug break-keep">
-                  별빛 아래 사계절 온수 노천탕
+                <h4 className="text-[17px] sm:text-[18px] md:text-[16px] lg:text-[18px] font-serif font-bold text-[#2B2623] tracking-tight leading-snug break-keep text-left md:text-center lg:text-left">
+                  <span className="hidden md:inline lg:hidden whitespace-nowrap">사계절 온수 노천탕</span>
+                  <span className="hidden lg:inline">별빛 아래 사계절 온수 노천탕</span>
                 </h4>
-                <p className="text-[13px] sm:text-[13.5px] text-[#2B2623]/75 font-sans leading-relaxed break-keep">
-                  제주 밤하늘의 쏟아지는 별빛 아래 누리는 사계절 따뜻한 야외 온수 스파.
+                <p className="text-[13px] sm:text-[13.5px] text-[#2B2623]/75 font-sans leading-relaxed break-keep text-left md:text-center lg:text-left">
+                  <span className="hidden md:inline lg:hidden">
+                    제주 밤하늘의 쏟아지는 별빛 아래 누리는 사계절 따뜻한 야외 온수 스파
+                  </span>
+                  <span className="md:hidden lg:inline">
+                    제주 밤하늘의 쏟아지는 별빛 아래 누리는 사계절 따뜻한 야외 온수 스파.
+                  </span>
                 </p>
               </div>
             </motion.div>
@@ -305,17 +333,23 @@ export default function Intro({ onNavigate }: IntroProps) {
               className="bg-[#FAF8F5] p-5 sm:p-7 rounded-2xl border border-[#E8E5DF] flex flex-col justify-between hover:border-[#8E5642]/50 hover:shadow-md transition-all group"
             >
               <div className="space-y-2.5 sm:space-y-3 text-left">
-                <div className="flex items-center justify-between border-b border-[#E8E5DF] pb-2.5">
-                  <span className="text-[11.5px] font-serif font-semibold tracking-wider text-[#8E5642] uppercase">
+                <div className="flex items-center justify-between md:justify-center lg:justify-between border-b border-[#E8E5DF] pb-2.5">
+                  <span className="text-[11.5px] font-serif font-semibold tracking-wider text-[#8E5642] uppercase text-left md:text-center lg:text-left">
                     TEA & CINEMA
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8E5642]/60 group-hover:bg-[#8E5642] transition-colors" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#8E5642]/60 group-hover:bg-[#8E5642] transition-colors md:hidden lg:inline-block" />
                 </div>
-                <h4 className="text-[17px] sm:text-[18px] font-serif font-bold text-[#2B2623] tracking-tight leading-snug break-keep">
-                  정갈한 다도와 아늑한 감성 시네마
+                <h4 className="text-[17px] sm:text-[18px] md:text-[16px] lg:text-[18px] font-serif font-bold text-[#2B2623] tracking-tight leading-snug break-keep text-left md:text-center lg:text-left">
+                  <span className="hidden md:inline lg:hidden whitespace-nowrap">다도 & 감성 시네마</span>
+                  <span className="hidden lg:inline">정갈한 다도와 아늑한 감성 시네마</span>
                 </h4>
-                <p className="text-[13px] sm:text-[13.5px] text-[#2B2623]/75 font-sans leading-relaxed break-keep">
-                  돌담을 바라보며 음미하는 명인다원 잎차와 대형 스크린 빔프로젝터 영화 한 편.
+                <p className="text-[13px] sm:text-[13.5px] text-[#2B2623]/75 font-sans leading-relaxed break-keep text-left md:text-center lg:text-left">
+                  <span className="hidden md:inline lg:hidden">
+                    돌담을 바라보며 음미하는 명인다원 잎차와 대형 스크린 빔프로젝터
+                  </span>
+                  <span className="hidden lg:inline">
+                    돌담을 바라보며 음미하는 명인다원 잎차와 대형 스크린 빔프로젝터 영화 한 편.
+                  </span>
                 </p>
               </div>
             </motion.div>
@@ -346,11 +380,11 @@ export default function Intro({ onNavigate }: IntroProps) {
         <div className="max-w-6xl mx-auto px-5 sm:px-8 lg:px-10">
           
           {/* Header row with Title and Subtitle - Clean without button or numbers, inviting ending */}
-          <div className="mb-10 text-center sm:text-left space-y-2">
+          <div className="mb-10 text-center md:text-center lg:text-left space-y-2">
             <span className="text-[#8E5642] tracking-[0.28em] text-[12px] font-semibold uppercase block font-serif">
               OUR HERITAGE & EXPERIENCE
             </span>
-            <h3 className="text-[26px] font-serif font-semibold text-[#2B2623]">
+            <h3 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623]">
               <span className="md:hidden">소소원의 대표 힐링 체험</span>
               <span className="hidden md:inline">소소원에서 마주하는 온전한 쉼</span>
             </h3>
@@ -385,12 +419,12 @@ export default function Intro({ onNavigate }: IntroProps) {
                 />
               </div>
               <div className="p-3 sm:p-4 flex flex-col justify-between flex-1">
-                <div className="text-left space-y-1">
-                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center gap-1.5 leading-snug">
+                <div className="text-left md:text-center lg:text-left space-y-1">
+                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center md:justify-center lg:justify-start gap-1.5 leading-snug">
                     <Sparkles className="w-3.5 h-3.5 text-[#8E5642] shrink-0 stroke-[2]" />
                     <span>웰컴 다도 명상</span>
                   </h4>
-                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5">
+                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5 text-left md:text-center lg:text-left">
                     <span className="md:hidden">유기농 잎차 다도</span>
                     <span className="hidden md:inline">제주 명인 유기농 잎차 티타임</span>
                   </p>
@@ -423,12 +457,12 @@ export default function Intro({ onNavigate }: IntroProps) {
                 />
               </div>
               <div className="p-3 sm:p-4 flex flex-col justify-between flex-1">
-                <div className="text-left space-y-1">
-                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center gap-1.5 leading-snug">
+                <div className="text-left md:text-center lg:text-left space-y-1">
+                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center md:justify-center lg:justify-start gap-1.5 leading-snug">
                     <Sun className="w-3.5 h-3.5 text-[#8E5642] shrink-0 stroke-[2]" />
                     <span>아침 정원 요가</span>
                   </h4>
-                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5">
+                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5 text-left md:text-center lg:text-left">
                     <span className="md:hidden">싱잉볼과 돌담 명상</span>
                     <span className="hidden md:inline">싱잉볼 소리와 돌담 아침 명상</span>
                   </p>
@@ -461,12 +495,12 @@ export default function Intro({ onNavigate }: IntroProps) {
                 />
               </div>
               <div className="p-3 sm:p-4 flex flex-col justify-between flex-1">
-                <div className="text-left space-y-1">
-                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center gap-1.5 leading-snug">
+                <div className="text-left md:text-center lg:text-left space-y-1">
+                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center md:justify-center lg:justify-start gap-1.5 leading-snug">
                     <Flame className="w-3.5 h-3.5 text-[#8E5642] shrink-0 stroke-[2]" />
                     <span>가든 야외 바베큐</span>
                   </h4>
-                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5">
+                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5 text-left md:text-center lg:text-left">
                     <span className="md:hidden">프라이빗 가든 디너</span>
                     <span className="hidden md:inline">저녁 노을빛 아래 프라이빗 디너</span>
                   </p>
@@ -499,13 +533,13 @@ export default function Intro({ onNavigate }: IntroProps) {
                 />
               </div>
               <div className="p-3 sm:p-4 flex flex-col justify-between flex-1">
-                <div className="text-left space-y-1">
-                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center gap-1.5 leading-snug">
+                <div className="text-left md:text-center lg:text-left space-y-1">
+                  <h4 className="font-['Gowun_Batang',serif] font-bold text-[14px] sm:text-[15.5px] text-[#2B2623] group-hover:text-[#8E5642] transition-colors flex items-center md:justify-center lg:justify-start gap-1.5 leading-snug">
                     <Waves className="w-3.5 h-3.5 text-[#8E5642] shrink-0 stroke-[2]" />
                     <span className="md:hidden">야외 노천 스파</span>
                     <span className="hidden md:inline">야외 온수 노천 스파</span>
                   </h4>
-                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5">
+                  <p className="text-[11.5px] sm:text-[12px] text-[#2B2623]/65 font-sans leading-relaxed break-keep pt-0.5 text-left md:text-center lg:text-left">
                     <span className="md:hidden">사계절 따스한 힐링</span>
                     <span className="hidden md:inline">사계절 38~40℃ 따스한 힐링</span>
                   </p>

@@ -92,7 +92,15 @@ export default function BookingWidget() {
           <div className="flex items-start gap-2">
             <span className="shrink-0 leading-relaxed">•</span>
             <p className="leading-relaxed flex-1">
-              쾌적하고 위생적인 수질 관리를 위해 <strong className="text-[#2B2623] font-normal md:font-semibold">제공되는 천연 허브 소금 외 개인 입욕제(버블바, 오일 등)의 사용을 금합니다.</strong>
+              쾌적하고 위생적인 수질 관리를 위해{' '}
+              <strong className="text-[#2B2623] font-normal md:font-semibold">
+                <span className="hidden md:inline lg:hidden">
+                  제공되는 천연 허브 소금 외 개인 입욕제의 사용을 금합니다.
+                </span>
+                <span className="md:hidden lg:inline">
+                  제공되는 천연 허브 소금 외 개인 입욕제(버블바, 오일 등)의 사용을 금합니다.
+                </span>
+              </strong>
             </p>
           </div>
           <div className="flex items-start gap-2">
@@ -153,7 +161,7 @@ export default function BookingWidget() {
           <span className="text-[#8E5642] text-[12px] font-serif font-bold tracking-[0.28em] uppercase block mb-3">
             RESERVATION GUIDE
           </span>
-          <h2 className="text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide mb-3">
+          <h2 className="text-[24px] md:text-[26px] font-serif font-semibold text-[#2B2623] tracking-wide mb-3">
             <span className="md:hidden">이용 안내 및 예약</span>
             <span className="hidden md:inline">소소원 이용 안내 및 예약하기</span>
           </h2>
